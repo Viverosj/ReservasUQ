@@ -1,4 +1,7 @@
 package co.edu.uniquindio.reservasuq.modelo;
 
-public enum TipoInstalacion {
+public class ReservasUQ {
+
+
+
 }

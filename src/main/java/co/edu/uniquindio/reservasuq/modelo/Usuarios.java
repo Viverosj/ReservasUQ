@@ -1,7 +1,6 @@
 package co.edu.uniquindio.reservasuq.modelo;
 
-import java.time.LocalDateTime;
-
+import co.edu.uniquindio.reservasuq.modelo.enums.TipoUsuario;
 import lombok.*;
 
 @AllArgsConstructor
