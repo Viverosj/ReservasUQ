@@ -20,9 +20,4 @@ public interface ServiciosReserva {
     int capacidadMaxima();
     double costoReserva();
 
-
-
-
-
-
 }
