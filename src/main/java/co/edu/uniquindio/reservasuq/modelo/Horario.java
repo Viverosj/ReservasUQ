@@ -16,6 +16,4 @@ public class Horario {
     private LocalDateTime horaInicio;
     private LocalDateTime horaFin;
 
-
-
 }
