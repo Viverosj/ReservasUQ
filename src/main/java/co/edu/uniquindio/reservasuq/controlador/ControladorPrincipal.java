@@ -1,20 +1,29 @@
-package co.edu.uniquindio.reservasuq.modelo;
-
+package co.edu.uniquindio.reservasuq.controlador;
+import co.edu.uniquindio.reservasuq.modelo.*;
 import co.edu.uniquindio.reservasuq.modelo.enums.TipoUsuario;
 import co.edu.uniquindio.reservasuq.servicio.ServiciosReserva;
-
 import java.time.LocalDate;
 import java.util.List;
 
-public class ReservasUQ implements ServiciosReserva {
+public class ControladorPrincipal implements ServiciosReserva {
 
-    List<Usuarios> usuarios;
-    List<Instalaciones> instalaciones;
-    List<Reservas> reservas;
+    private static ControladorPrincipal INSTANCIA;
+    private final ReservasUQ reservasUQ;
+
+    private ControladorPrincipal() {
+        reservasUQ = new ReservasUQ();
+    }
+
+    public static ControladorPrincipal getInstancia() {
+        if (INSTANCIA == null) {
+            INSTANCIA = new ControladorPrincipal();
+        }
+        return INSTANCIA;
+    }
 
     @Override
-    public Usuarios login(String correo, String password) throws Exception {
-        return null;
+    public Usuarios login(String correo, String contrasena) throws Exception {
+        return reservasUQ.login(correo, contrasena);
     }
 
     @Override
@@ -23,8 +32,13 @@ public class ReservasUQ implements ServiciosReserva {
     }
 
     @Override
-    public void crearInstalaciones(String nombre, int capacidad, float costo, List<Horario> horarios) {
+    public void registrarUsuario(String cedula, String nombre, TipoUsuario tipoUsuario, String correo, String password) throws Exception {
+        reservasUQ.registrarUsuario(cedula, nombre, tipoUsuario, correo, password);
+    }
 
+    @Override
+    public void crearInstalaciones(String nombre,int aforo, float costo, List<Horario> horarios) {
+        reservasUQ.crearInstalaciones(nombre, aforo, costo, horarios);
     }
 
     @Override
@@ -106,4 +120,7 @@ public class ReservasUQ implements ServiciosReserva {
     public double costoReserva() {
         return 0;
     }
+
+    //TODO Completar con el resto de métodos necesarios para la aplicación
+
 }
