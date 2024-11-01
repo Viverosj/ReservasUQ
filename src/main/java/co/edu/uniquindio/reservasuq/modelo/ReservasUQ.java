@@ -1,8 +1,6 @@
 package co.edu.uniquindio.reservasuq.modelo;
-
 import co.edu.uniquindio.reservasuq.modelo.enums.TipoUsuario;
 import co.edu.uniquindio.reservasuq.servicio.ServiciosReserva;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -19,6 +17,11 @@ public class ReservasUQ implements ServiciosReserva {
 
     @Override
     public void registrarUsuario(String cedula, String nombre, String correo, TipoUsuario tipoUsuario, String password) throws Exception {
+
+    }
+
+    @Override
+    public void registrarUsuario(String cedula, String nombre, TipoUsuario tipoUsuario, String correo, String password) throws Exception {
 
     }
 
