@@ -1,5 +1,6 @@
 package co.edu.uniquindio.reservasuq.controlador;
 import co.edu.uniquindio.reservasuq.modelo.*;
+import co.edu.uniquindio.reservasuq.modelo.enums.TipoInstalacion;
 import co.edu.uniquindio.reservasuq.modelo.enums.TipoPersona;
 import co.edu.uniquindio.reservasuq.servicio.ServiciosReservasUQ;
 import javafx.fxml.FXMLLoader;
@@ -34,8 +35,7 @@ public class ControladorPrincipal implements ServiciosReservasUQ {
     }
 
     @Override
-    public void registrarPersona(String cedula, String nombre, String correo, TipoPersona tipoPersona, String password) throws Exception {
-
+    public void registrarPersona(String cedula, String nombre, TipoPersona tipoPersona, String correo, String password) throws Exception {
     }
 
     @Override
@@ -44,9 +44,14 @@ public class ControladorPrincipal implements ServiciosReservasUQ {
     }
 
     @Override
-    public void crearInstalacion(String nombre,int aforo, float costo, List<Horario> horarios) {
-        reservasUQ.crearInstalacion(nombre, aforo, costo, horarios);
+    public void crearInstalacion(String nombre, int aforo, TipoInstalacion tipoInstalacion, List<Horario> horarios) throws Exception {
+
     }
+
+    //@Override
+    //public void crearInstalacion(String nombre,int aforo, float costo, List<Horario> horarios) throws Exception {
+      //  reservasUQ.crearInstalacion(nombre, aforo, costo, horarios);
+    //}
 
     @Override
     public Reserva crearReserva(String idInstalaciones, String cedulaUsuario, LocalDate diaReserva, String horaReserva) throws Exception {

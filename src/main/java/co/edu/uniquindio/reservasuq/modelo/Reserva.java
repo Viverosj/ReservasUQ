@@ -15,7 +15,8 @@ public class Reserva {
 
     private String ID;
     private LocalDateTime fechaReserva;
-    private Persona usuarios;
+    private Persona persona;
     private Instalacion instalaciones;
     private double costo;
+
 }

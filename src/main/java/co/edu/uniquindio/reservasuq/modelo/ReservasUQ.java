@@ -1,4 +1,5 @@
 package co.edu.uniquindio.reservasuq.modelo;
+import co.edu.uniquindio.reservasuq.modelo.enums.TipoInstalacion;
 import co.edu.uniquindio.reservasuq.modelo.enums.TipoPersona;
 import co.edu.uniquindio.reservasuq.servicio.ServiciosReservasUQ;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -35,7 +37,7 @@ public class ReservasUQ implements ServiciosReservasUQ {
     }
 
     @Override
-    public void registrarPersona(String cedula, String nombre, String correo, TipoPersona tipoPersona, String password) throws Exception {
+    public void registrarPersona(String cedula, String nombre, TipoPersona tipoPersona,String correo, String password) throws Exception {
         String mensajesValidacion = "";
 
         if(cedula == null || cedula.isEmpty()){
@@ -53,7 +55,6 @@ public class ReservasUQ implements ServiciosReservasUQ {
         if (tipoPersona == null) {
             mensajesValidacion += "Debe seleccionar un tipo de persona\n";
         }
-
 
         if(!mensajesValidacion.isEmpty()){
             throw new Exception(mensajesValidacion);
@@ -73,7 +74,6 @@ public class ReservasUQ implements ServiciosReservasUQ {
 
         personas.add(persona);
     }
-
     @Override
     public Persona obtenerPersona(String cedula) {
         for (Persona paciente: personas) {
@@ -83,24 +83,53 @@ public class ReservasUQ implements ServiciosReservasUQ {
         }
         return null;
     }
-    @Override
-    public void crearInstalacion(String nombre, int capacidad, float costo, List<Horario> horarios) {
 
+    @Override
+    public void crearInstalacion(String nombre, int aforo, TipoInstalacion tipoInstalacion, List<Horario> horarios) throws Exception {
+        String mensajesValidacion = "";
+
+        // Validar los parámetros de entrada
+        if (nombre == null || nombre.isEmpty()) {
+            mensajesValidacion += "El nombre de la instalación no puede estar vacío.\n";
+        }
+
+        if (aforo <= 0) {
+            mensajesValidacion += "La capacidad debe ser un número positivo.\n";
+        }
+
+        if (horarios == null || horarios.isEmpty()) {
+            mensajesValidacion += "La lista de horarios no puede estar vacía.\n";
+        }
+
+        // Lanzar excepción si hay errores de validación
+        if (!mensajesValidacion.isEmpty()) {
+            throw new Exception(mensajesValidacion);
+        }
+
+        // Crear la nueva instalación
+        Instalacion nuevaInstalacion = new Instalacion(nombre, aforo, tipoInstalacion, horarios);
+
+        // Agregar la nueva instalación a la lista de instalaciones
+        instalaciones.add(nuevaInstalacion);
     }
 
+
     @Override
-    public Reserva crearReserva(String idInstalaciones, String cedulaUsuario, LocalDate diaReserva, String horaReserva) throws Exception {
+    public Reserva crearReserva(String idInstalacion, String cedulaPersona, LocalDate diaReserva, String horaReserva) throws Exception {
         return null;
     }
-
     @Override
     public List<Reserva> listarTodasReservas() {
-        return null;
+        return reservas;
     }
-
     @Override
-    public List<Reserva> listarReservasPorPersona(String cedulaUsuario) {
-        return null;
+    public List<Reserva> listarReservasPorPersona(String cedulaPersona) {
+        List<Reserva> reservasPersona = new ArrayList<>();
+        for (Reserva reserva : reservas) {
+            if (reserva.getPersona().getCedula().equals(cedulaPersona)) {
+                reservasPersona.add(reserva);
+            }
+        }
+        return reservasPersona;
     }
-
 }
