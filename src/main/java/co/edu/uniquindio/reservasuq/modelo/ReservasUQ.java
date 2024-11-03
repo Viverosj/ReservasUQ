@@ -258,9 +258,16 @@ public class ReservasUQ implements ServiciosReservasUQ {
 
     @Override
     public List<Reserva> listarReservasPorInstalacion(String idInstalacion) {
-        return null;
-    }
+        List<Reserva> reservasInstalacion = new ArrayList<>();
 
+        for (Reserva reserva : reservas) {
+            if (reserva.getIdInstalacion().equals(idInstalacion)) {
+                reservasInstalacion.add(reserva);
+            }
+        }
+
+        return reservasInstalacion;
+    }
     @Override
     public void enviarNotificacionReserva(String email, String mensaje) {
 
@@ -293,7 +300,6 @@ public class ReservasUQ implements ServiciosReservasUQ {
 
     @Override
     public void actualizarInstalacion(String idInstalacion, int aforo, float costo, List<Horario> horarios) {
-
     }
 
     @Override
@@ -303,4 +309,5 @@ public class ReservasUQ implements ServiciosReservasUQ {
     @Override
     public void gestionarUsuarios() throws Exception {
     }
+
 }
