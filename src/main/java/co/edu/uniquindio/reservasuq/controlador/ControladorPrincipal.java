@@ -70,18 +70,8 @@ public class ControladorPrincipal implements ServiciosReservasUQ {
     }
 
     @Override
-    public List<Reserva> listarReservasPorPersona(String cedulaUsuario) {
+    public List<Reserva> listarReservasPorPersona(String cedulaPersona) {
         return null;
-    }
-
-    @Override
-    public void actualizarDatosPersona(String cedula, String nombre, TipoPersona tipoPersona, String email, String password) throws Exception {
-
-    }
-
-    @Override
-    public void eliminarPersona(String cedula) throws Exception {
-
     }
 
     @Override

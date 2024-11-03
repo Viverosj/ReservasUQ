@@ -7,7 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -152,7 +156,7 @@ public class ReservasUQ implements ServiciosReservasUQ {
                 .idInstalacion(idInstalacion)
                 .cedulaPersona(cedulaPersona)
                 .diaReserva(diaReserva)
-                .horaReserva(horaReserva)
+                .horaInicio(horaReserva)
                 .build();
 
         reservas.add(nuevaReserva);
@@ -175,7 +179,7 @@ public class ReservasUQ implements ServiciosReservasUQ {
         for (Reserva reserva : reservas) {
             if (reserva.getIdInstalacion().equals(instalacion.getNombre()) &&
                     reserva.getDiaReserva().equals(diaReserva) &&
-                    reserva.getHoraReserva().equals(horaReserva)) {
+                    reserva.getHoraInicio().equals(horaReserva)) {
                 return false;
             }
         }
@@ -188,33 +192,68 @@ public class ReservasUQ implements ServiciosReservasUQ {
     }
 
     @Override
-    public List<Reserva> listarReservasPorPersona(String cedulaUsuario) {
-        return null;
-    }
-
-    @Override
-    public void actualizarDatosPersona(String cedula, String nombre, TipoPersona tipoPersona, String email, String password) throws Exception {
-
-    }
-
-    @Override
-    public void eliminarPersona(String cedula) throws Exception {
-
+    public List<Reserva> listarReservasPorPersona(String cedulaPersona) {
+        List<Reserva> reservasPersona = new ArrayList<>();
+        for (Reserva reserva : reservas) {
+            if (reserva.getCedulaPersona().equals(cedulaPersona)) {
+                reservasPersona.add(reserva);
+            }
+        }
+        return reservasPersona;
     }
 
     @Override
     public List<Reserva> obtenerHistorialReservas(String cedulaPersona) {
-        return null;
+        List<Reserva> reservasPersona = new ArrayList<>();
+
+        for (Reserva reserva : reservas) {
+            if (reserva.getCedulaPersona().equals(cedulaPersona)) {
+                reservasPersona.add(reserva);
+            }
+        }
+
+        reservasPersona.sort(Comparator.comparing(Reserva::getDiaReserva).reversed()); // Ordena la lista de reservas por fecha en orden descendente
+
+        return reservasPersona;
     }
 
     @Override
-    public List<Horario> obtenerHorariosDisponibles(String idInstalacion, LocalDate diaReserva) {
-        return null;
+    public List<Horario> obtenerHorariosDisponibles(String idInstalacion, LocalDate diaReserva) throws Exception {
+        // Buscar la instalación por ID
+        Instalacion instalacion = buscarInstalacionPorId(idInstalacion);
+        if (instalacion == null) {
+            throw new Exception("La instalación especificada no existe.");
+        }
+
+        // Obtiene todos los horarios de la instalación
+        List<Horario> horarios = instalacion.getHorarios();
+
+        // Filtra los horarios ya reservados para la fecha especificada
+        List<Horario> horariosReservados = reservas.stream()
+                .filter(reserva -> reserva.getIdInstalacion().equals(idInstalacion) &&
+                        reserva.getDiaReserva().equals(diaReserva))
+                .map(reserva -> new Horario(
+                        LocalTime.parse(reserva.getHoraInicio()),
+                        LocalTime.parse(reserva.getHoraFin())))
+                .toList();
+
+        // Filtra horarios disponibles: aquellos que no se solapan con horarios reservados
+        List<Horario> horariosDisponibles = horarios.stream()
+                .filter(horario -> horariosReservados.stream()
+                        .noneMatch(horario::coincideCon))
+                .collect(Collectors.toList());
+
+        return horariosDisponibles;
     }
 
     @Override
-    public void cancelarReserva(String idReserva) throws Exception {
-
+    public void cancelarReserva(String reservaId) {
+        for (Reserva reserva: reservas) {
+            if(reserva.getId().equals(reservaId)){
+                reservas.remove(reserva);
+                break;
+            }
+        }
     }
 
     @Override

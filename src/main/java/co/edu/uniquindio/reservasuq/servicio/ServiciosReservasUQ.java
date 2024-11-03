@@ -27,14 +27,11 @@ public interface ServiciosReservasUQ {
     boolean verificarDisponibilidad(Instalacion instalacion, LocalDate diaReserva, String horaReserva);
 
     List<Reserva> listarTodasReservas();
-    List<Reserva> listarReservasPorPersona(String cedulaUsuario);
-    void actualizarDatosPersona(String cedula, String nombre, TipoPersona tipoPersona, String email, String password) throws Exception;
-    //(Para permitir que los usuarios actualicen su información personal.)
-    void eliminarPersona(String cedula) throws Exception;
-    //(Para eliminar usuarios registrados.)
+    List<Reserva> listarReservasPorPersona(String cedulaPersona);
+
     List<Reserva> obtenerHistorialReservas(String cedulaPersona);
     //(Para que el usuario consulte el historial de sus reservas.)
-    List<Horario> obtenerHorariosDisponibles(String idInstalacion, LocalDate diaReserva);
+    List<Horario> obtenerHorariosDisponibles(String idInstalacion, LocalDate diaReserva) throws Exception;
     //(Para listar los horarios disponibles de una instalación en una fecha específica.)
     void cancelarReserva(String idReserva) throws Exception;
     //(Permite a los usuarios cancelar una reserva según las políticas.)
