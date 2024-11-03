@@ -1,6 +1,7 @@
 module co.edu.uniquindio.reservasuq {
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.graphics;
     requires static lombok;
     requires org.simplejavamail.core;
     requires org.simplejavamail;
