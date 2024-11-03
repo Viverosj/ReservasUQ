@@ -88,7 +88,6 @@ public class ReservasUQ implements ServiciosReservasUQ {
     public void crearInstalacion(String nombre, int aforo, TipoInstalacion tipoInstalacion, List<Horario> horarios) throws Exception {
         String mensajesValidacion = "";
 
-        // Validar los parámetros de entrada
         if (nombre == null || nombre.isEmpty()) {
             mensajesValidacion += "El nombre de la instalación no puede estar vacío.\n";
         }
@@ -101,21 +100,16 @@ public class ReservasUQ implements ServiciosReservasUQ {
             mensajesValidacion += "La lista de horarios no puede estar vacía.\n";
         }
 
-        // Lanzar excepción si hay errores de validación
         if (!mensajesValidacion.isEmpty()) {
             throw new Exception(mensajesValidacion);
         }
 
-        // Crear la nueva instalación
-        Instalacion nuevaInstalacion = new Instalacion(nombre, aforo, tipoInstalacion, horarios);
-
-        // Agregar la nueva instalación a la lista de instalaciones
-        instalaciones.add(nuevaInstalacion);
+        Instalacion instalacion = new Instalacion(nombre, aforo, tipoInstalacion, horarios);
+        instalaciones.add(instalacion);
     }
 
-
     @Override
-    public Reserva crearReserva(String idInstalacion, String cedulaPersona, LocalDate diaReserva, String horaReserva) throws Exception {
+    public Reserva crearReserva(String ID, String cedulaPersona, LocalDate diaReserva, String horaReserva) throws Exception {
         return null;
     }
     @Override
@@ -131,5 +125,75 @@ public class ReservasUQ implements ServiciosReservasUQ {
             }
         }
         return reservasPersona;
+    }
+
+    @Override
+    public void actualizarDatosPersona(String cedula, String nombre, TipoPersona tipoPersona, String email, String password) throws Exception {
+
+    }
+
+    @Override
+    public void eliminarPersona(String cedula) throws Exception {
+
+    }
+
+    @Override
+    public List<Reserva> obtenerHistorialReservas(String cedulaPersona) {
+        return null;
+    }
+
+    @Override
+    public boolean verificarDisponibilidad(String idInstalacion, LocalDate diaReserva, String horaReserva) {
+        return false;
+    }
+
+    @Override
+    public List<Horario> obtenerHorariosDisponibles(String idInstalacion, LocalDate diaReserva) {
+        return null;
+    }
+
+    @Override
+    public void cancelarReserva(String idReserva) throws Exception {
+
+    }
+
+    @Override
+    public List<Reserva> listarReservasPorInstalacion(String idInstalacion) {
+        return null;
+    }
+
+    @Override
+    public void enviarNotificacionReserva(String email, String mensaje) {
+
+    }
+
+    @Override
+    public void enviarRecordatorioReserva(String idReserva) {
+
+    }
+
+    @Override
+    public boolean verificarRestriccionUsuario(String cedulaPersona, String idInstalacion) {
+        return false;
+    }
+
+    @Override
+    public void definirRestricciones(String idInstalacion, int aforoMaximo, LocalDate horarioInicio, LocalDate horarioFin) {
+
+    }
+
+    @Override
+    public List<Persona> listarUsuariosPorTipo(TipoPersona tipo) {
+        return null;
+    }
+
+    @Override
+    public List<Instalacion> listarInstalaciones() {
+        return null;
+    }
+
+    @Override
+    public void actualizarInstalacion(String idInstalacion, int aforo, float costo, List<Horario> horarios) {
+
     }
 }

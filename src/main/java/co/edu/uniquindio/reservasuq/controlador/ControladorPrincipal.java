@@ -68,6 +68,76 @@ public class ControladorPrincipal implements ServiciosReservasUQ {
         return null;
     }
 
+    @Override
+    public void actualizarDatosPersona(String cedula, String nombre, TipoPersona tipoPersona, String email, String password) throws Exception {
+
+    }
+
+    @Override
+    public void eliminarPersona(String cedula) throws Exception {
+
+    }
+
+    @Override
+    public List<Reserva> obtenerHistorialReservas(String cedulaPersona) {
+        return null;
+    }
+
+    @Override
+    public boolean verificarDisponibilidad(String idInstalacion, LocalDate diaReserva, String horaReserva) {
+        return false;
+    }
+
+    @Override
+    public List<Horario> obtenerHorariosDisponibles(String idInstalacion, LocalDate diaReserva) {
+        return null;
+    }
+
+    @Override
+    public void cancelarReserva(String idReserva) throws Exception {
+
+    }
+
+    @Override
+    public List<Reserva> listarReservasPorInstalacion(String idInstalacion) {
+        return null;
+    }
+
+    @Override
+    public void enviarNotificacionReserva(String email, String mensaje) {
+
+    }
+
+    @Override
+    public void enviarRecordatorioReserva(String idReserva) {
+
+    }
+
+    @Override
+    public boolean verificarRestriccionUsuario(String cedulaPersona, String idInstalacion) {
+        return false;
+    }
+
+    @Override
+    public void definirRestricciones(String idInstalacion, int aforoMaximo, LocalDate horarioInicio, LocalDate horarioFin) {
+
+    }
+
+    @Override
+    public List<Persona> listarUsuariosPorTipo(TipoPersona tipo) {
+        return null;
+    }
+
+    @Override
+    public List<Instalacion> listarInstalaciones() {
+        return null;
+    }
+
+    @Override
+    public void actualizarInstalacion(String idInstalacion, int aforo, float costo, List<Horario> horarios) {
+
+    }
+
     //TODO Completar con el resto de métodos necesarios para la aplicación
 
     public void mostrarAlerta(String mensaje, String titulo, Alert.AlertType tipo) {
