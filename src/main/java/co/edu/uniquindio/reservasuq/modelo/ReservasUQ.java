@@ -1,112 +1,106 @@
 package co.edu.uniquindio.reservasuq.modelo;
 import co.edu.uniquindio.reservasuq.modelo.enums.TipoPersona;
 import co.edu.uniquindio.reservasuq.servicio.ServiciosReservasUQ;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDate;
 import java.util.List;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+
 public class ReservasUQ implements ServiciosReservasUQ {
 
-    List<Persona> usuarios;
-    List<Instalacion> instalaciones;
-    List<Reservas> reservas;
+    private List<Persona> personas;
+    private List<Instalacion> instalaciones;
+    private List<Reserva> reservas;
 
     @Override
     public Persona login(String correo, String password) throws Exception {
-        return null;
+        if (correo == null || correo.isEmpty() || password == null || password.isEmpty()) {
+            throw new Exception("Correo y contraseña no pueden estar vacíos.");
+        }
+
+        for (Persona persona : personas) {
+            if (persona.getCorreo().equals(correo) && persona.getPassword().equals(password)) {
+                return persona;
+            }
+        }
+        throw new Exception("Correo o contraseña incorrectos.");
     }
 
     @Override
     public void registrarPersona(String cedula, String nombre, String correo, TipoPersona tipoPersona, String password) throws Exception {
+        String mensajesValidacion = "";
+
+        if(cedula == null || cedula.isEmpty()){
+            mensajesValidacion += "Debe ingresar la cedula\n";
+        }
+
+        if(nombre == null || nombre.isEmpty()){
+            mensajesValidacion += "Debe ingresar el nombre\n";
+        }
+
+        if(correo == null || correo.isEmpty()){
+            mensajesValidacion += "Debe ingresar el correo\n";
+        }
+
+        if (tipoPersona == null) {
+            mensajesValidacion += "Debe seleccionar un tipo de persona\n";
+        }
+
+
+        if(!mensajesValidacion.isEmpty()){
+            throw new Exception(mensajesValidacion);
+        }
+
+        if(obtenerPersona(cedula)!=null){
+            throw new Exception("Ya existe un paciente con la identificación ingresada");
+        }
+
+
+        Persona persona = Persona.builder()
+                .tipoPersona(tipoPersona)
+                .cedula(cedula)
+                .nombre(nombre)
+                .correo(correo)
+                .build();
+
+        personas.add(persona);
+    }
+
+    @Override
+    public Persona obtenerPersona(String cedula) {
+        for (Persona paciente: personas) {
+            if(paciente.getCedula().equals(cedula)){
+                return paciente;
+            }
+        }
+        return null;
+    }
+    @Override
+    public void crearInstalacion(String nombre, int capacidad, float costo, List<Horario> horarios) {
 
     }
 
-
     @Override
-    public void registrarUsuario(String cedula, String nombre, TipoPersona tipoUsuario, String correo, String password) throws Exception {
-
-    }
-
-    @Override
-    public void crearInstalaciones(String nombre, int capacidad, float costo, List<Horario> horarios) {
-
-    }
-
-    @Override
-    public Reservas crearReserva(String idInstalaciones, String cedulaUsuario, LocalDate diaReserva, String horaReserva) throws Exception {
+    public Reserva crearReserva(String idInstalaciones, String cedulaUsuario, LocalDate diaReserva, String horaReserva) throws Exception {
         return null;
     }
 
     @Override
-    public List<Reservas> listarTodasReservas() {
+    public List<Reserva> listarTodasReservas() {
         return null;
     }
 
     @Override
-    public List<Reservas> listarReservasPorPersona(String cedulaUsuario) {
+    public List<Reserva> listarReservasPorPersona(String cedulaUsuario) {
         return null;
     }
 
-    @Override
-    public Persona obtenerUsuarios(String cedula, String nombre, String correo, TipoPersona tipoUsuario, String password) {
-        return null;
-    }
-
-    @Override
-    public Persona validarUsuarios(String cedula, String nombre, String correo, TipoPersona tipoUsuario, String password) {
-        return null;
-    }
-
-    @Override
-    public void enviarNotificacionEmail() {
-
-    }
-
-    @Override
-    public boolean validarIngresoAdministrador() {
-        return false;
-    }
-
-    @Override
-    public Instalacion crearEvento() {
-        return null;
-    }
-
-    @Override
-    public Instalacion obtenerEvento() {
-        return null;
-    }
-
-    @Override
-    public void validarDisponibilidad() {
-
-    }
-
-    @Override
-    public void crearReserva() {
-
-    }
-
-    @Override
-    public void cancelarReserva() {
-
-    }
-
-    @Override
-    public boolean disponibilidadInstalaciones() {
-        return false;
-    }
-
-    @Override
-    public String historialReservas() {
-        return null;
-    }
-
-    @Override
-    public int capacidadMaxima() {
-        return 0;
-    }
-
-    @Override
-    public double costoReserva() {
-        return 0;
-    }
 }

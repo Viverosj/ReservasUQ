@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 @ToString
-public class Reservas {
+public class Reserva {
 
     private String ID;
     private LocalDateTime fechaReserva;

@@ -1,28 +1,26 @@
-package co.edu.uniquindio.reservasuq;
-
-import co.edu.uniquindio.reservasuq.modelo.Persona;
+package co.edu.uniquindio.reservasuq.modelo;
 import lombok.Getter;
 import lombok.Setter;
 
+@Setter
+@Getter
 public class Sesion {
 
     public static Sesion INSTANCIA;
 
-    @Getter @Setter
-    private Persona usuarios;
+    private Persona persona;
 
     private Sesion() {
     }
-
     public static Sesion getInstancia() {
         if (INSTANCIA == null) {
             INSTANCIA = new Sesion();
         }
         return INSTANCIA;
     }
-
     public void cerrarSesion() {
-        usuarios = null;
+        persona = null;
     }
-
 }
+
+

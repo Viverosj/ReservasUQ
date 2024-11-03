@@ -39,93 +39,28 @@ public class ControladorPrincipal implements ServiciosReservasUQ {
     }
 
     @Override
-    public void registrarUsuario(String cedula, String nombre, TipoPersona tipoUsuario, String correo, String password) throws Exception {
-
+    public Persona obtenerPersona(String cedula) {
+        return null; //creo que se cambia
     }
 
     @Override
-    public void crearInstalaciones(String nombre,int aforo, float costo, List<Horario> horarios) {
-        reservasUQ.crearInstalaciones(nombre, aforo, costo, horarios);
+    public void crearInstalacion(String nombre,int aforo, float costo, List<Horario> horarios) {
+        reservasUQ.crearInstalacion(nombre, aforo, costo, horarios);
     }
 
     @Override
-    public Reservas crearReserva(String idInstalaciones, String cedulaUsuario, LocalDate diaReserva, String horaReserva) throws Exception {
+    public Reserva crearReserva(String idInstalaciones, String cedulaUsuario, LocalDate diaReserva, String horaReserva) throws Exception {
         return null;
     }
 
     @Override
-    public List<Reservas> listarTodasReservas() {
+    public List<Reserva> listarTodasReservas() {
         return null;
     }
 
     @Override
-    public List<Reservas> listarReservasPorPersona(String cedulaUsuario) {
+    public List<Reserva> listarReservasPorPersona(String cedulaUsuario) {
         return null;
-    }
-
-    @Override
-    public Persona obtenerUsuarios(String cedula, String nombre, String correo, TipoPersona tipoUsuario, String password) {
-        return null;
-    }
-
-    @Override
-    public Persona validarUsuarios(String cedula, String nombre, String correo, TipoPersona tipoUsuario, String password) {
-        return null;
-    }
-
-    @Override
-    public void enviarNotificacionEmail() {
-
-    }
-
-    @Override
-    public boolean validarIngresoAdministrador() {
-        return false;
-    }
-
-    @Override
-    public Instalacion crearEvento() {
-        return null;
-    }
-
-    @Override
-    public Instalacion obtenerEvento() {
-        return null;
-    }
-
-    @Override
-    public void validarDisponibilidad() {
-
-    }
-
-    @Override
-    public void crearReserva() {
-
-    }
-
-    @Override
-    public void cancelarReserva() {
-
-    }
-
-    @Override
-    public boolean disponibilidadInstalaciones() {
-        return false;
-    }
-
-    @Override
-    public String historialReservas() {
-        return null;
-    }
-
-    @Override
-    public int capacidadMaxima() {
-        return 0;
-    }
-
-    @Override
-    public double costoReserva() {
-        return 0;
     }
 
     //TODO Completar con el resto de métodos necesarios para la aplicación
