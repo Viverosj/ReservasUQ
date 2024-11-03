@@ -95,7 +95,7 @@ public class ControladorPrincipal implements ServiciosReservasUQ {
     }
 
     @Override
-    public void enviarNotificacionReserva(String email, String mensaje) {
+    public void enviarNotificacionReserva(String email, Reserva reserva) {
 
     }
 

@@ -30,14 +30,14 @@ public interface ServiciosReservasUQ {
     List<Reserva> listarReservasPorPersona(String cedulaPersona);
 
     List<Reserva> obtenerHistorialReservas(String cedulaPersona);
-    //(Para que el usuario consulte el historial de sus reservas.)
+
     List<Horario> obtenerHorariosDisponibles(String idInstalacion, LocalDate diaReserva) throws Exception;
-    //(Para listar los horarios disponibles de una instalación en una fecha específica.)
+
     void cancelarReserva(String idReserva) throws Exception;
-    //(Permite a los usuarios cancelar una reserva según las políticas.)
+
     List<Reserva> listarReservasPorInstalacion(String idInstalacion);
-    //(Para ver las reservas actuales de una instalación.)
-    void enviarNotificacionReserva(String email, String mensaje);
+
+    void enviarNotificacionReserva(String email, Reserva reserva);
     //(Para enviar una notificación al usuario sobre la confirmación de su reserva.)
     void enviarRecordatorioReserva(String idReserva);
     //(Para enviar recordatorios de reservas próximas.)

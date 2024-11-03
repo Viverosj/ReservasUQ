@@ -2,6 +2,7 @@ package co.edu.uniquindio.reservasuq.modelo;
 import co.edu.uniquindio.reservasuq.modelo.enums.TipoInstalacion;
 import co.edu.uniquindio.reservasuq.modelo.enums.TipoPersona;
 import co.edu.uniquindio.reservasuq.servicio.ServiciosReservasUQ;
+import co.edu.uniquindio.reservasuq.utils.EnvioEmail;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -269,8 +270,23 @@ public class ReservasUQ implements ServiciosReservasUQ {
         return reservasInstalacion;
     }
     @Override
-    public void enviarNotificacionReserva(String email, String mensaje) {
+    public void enviarNotificacionReserva(String email, Reserva reserva) {
 
+        String asunto = "Confirmación de Reserva para " + reserva.getIdInstalacion();
+        String mensaje = String.format("Estimado usuario,\n\n" +
+                        "Su reserva para la instalación %s ha sido confirmada.\n" +
+                        "Detalles de la reserva:\n" +
+                        " - Fecha: %s\n" +
+                        " - Hora de inicio: %s\n" +
+                        " - Hora de fin: %s\n\n" +
+                        "Gracias por utilizar nuestro sistema de reservas.\n" +
+                        "Universidad del Quindío",
+                reserva.getIdInstalacion(),
+                reserva.getDiaReserva(),
+                reserva.getHoraInicio(),
+                reserva.getHoraFin());
+
+        EnvioEmail.enviarNotificacion(email, asunto,mensaje);
     }
 
     @Override
