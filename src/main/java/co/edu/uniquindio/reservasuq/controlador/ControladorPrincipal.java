@@ -100,7 +100,7 @@ public class ControladorPrincipal implements ServiciosReservasUQ {
     }
 
     @Override
-    public void enviarRecordatorioReserva(String idReserva) {
+    public void enviarRecordatorioReserva(String email, Reserva reserva) {
 
     }
 

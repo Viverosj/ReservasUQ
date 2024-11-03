@@ -290,8 +290,23 @@ public class ReservasUQ implements ServiciosReservasUQ {
     }
 
     @Override
-    public void enviarRecordatorioReserva(String idReserva) {
+    public void enviarRecordatorioReserva(String email, Reserva reserva) {
+        
+        String asunto = "Recordatorio de Reserva para " + reserva.getIdInstalacion();
+        String mensaje = String.format("Estimado usuario,\n\n" +
+                        "Le recordamos que tiene una reserva programada para la instalación %s.\n" +
+                        "Detalles de la reserva:\n" +
+                        " - Fecha: %s\n" +
+                        " - Hora de inicio: %s\n" +
+                        " - Hora de fin: %s\n\n" +
+                        "Por favor, asegúrese de llegar a tiempo para evitar inconvenientes.\n" +
+                        "Universidad del Quindío",
+                reserva.getIdInstalacion(),
+                reserva.getDiaReserva(),
+                reserva.getHoraInicio(),
+                reserva.getHoraFin());
 
+        EnvioEmail.enviarNotificacion(email, asunto, mensaje);
     }
 
     @Override

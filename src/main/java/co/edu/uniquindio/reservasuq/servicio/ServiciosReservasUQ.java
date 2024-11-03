@@ -38,11 +38,11 @@ public interface ServiciosReservasUQ {
     List<Reserva> listarReservasPorInstalacion(String idInstalacion);
 
     void enviarNotificacionReserva(String email, Reserva reserva);
-    //(Para enviar una notificación al usuario sobre la confirmación de su reserva.)
-    void enviarRecordatorioReserva(String idReserva);
-    //(Para enviar recordatorios de reservas próximas.)
-    boolean verificarRestriccionUsuario(String cedulaPersona, String idInstalacion);
-    //(Para verificar si el usuario cumple con las restricciones de acceso a una instalación.)
+
+    void enviarRecordatorioReserva(String email, Reserva reserva);
+
+    boolean verificarRestriccionUsuario(String cedulaPersona, String idInstalacion); // Para verificar si el usuario cumple con las restricciones de acceso a una instalación
+
     void definirRestricciones(String idInstalacion, int aforoMaximo, LocalDate horarioInicio, LocalDate horarioFin);
     //(Permite a los administradores configurar restricciones para las instalaciones.)
     List<Persona> listarUsuariosPorTipo(TipoPersona tipo);
