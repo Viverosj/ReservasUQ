@@ -291,7 +291,7 @@ public class ReservasUQ implements ServiciosReservasUQ {
 
     @Override
     public void enviarRecordatorioReserva(String email, Reserva reserva) {
-        
+
         String asunto = "Recordatorio de Reserva para " + reserva.getIdInstalacion();
         String mensaje = String.format("Estimado usuario,\n\n" +
                         "Le recordamos que tiene una reserva programada para la instalación %s.\n" +
@@ -310,8 +310,64 @@ public class ReservasUQ implements ServiciosReservasUQ {
     }
 
     @Override
-    public boolean verificarRestriccionUsuario(String cedulaPersona, String idInstalacion) {
-        return false;
+    public double costoReservaInstalacion(String cedulaPersona, String idInstalacion, int horasReserva) throws Exception {
+
+        Persona usuario = obtenerPersona(cedulaPersona);
+        if (usuario == null) {
+            throw new Exception("Usuario no encontrado.");
+        }
+
+        Instalacion instalacion = buscarInstalacionPorId(idInstalacion);
+        if (instalacion == null) {
+            throw new Exception("Instalación no encontrada.");
+        }
+
+        double costoBasePorHora;
+
+        // Asignar el costo base por hora según la instalación (solo aplica para externos)
+        switch (instalacion.getTipoInstalacion()) {
+            case PISCINA:
+                costoBasePorHora = 15000;
+                break;
+            case GIMNASIO:
+                costoBasePorHora = 10000;
+                break;
+            case CANCHA_FUTBOL:
+                costoBasePorHora = 40000;
+                break;
+            case CANCHA_BALONCESTO:
+                costoBasePorHora = 30000;
+                break;
+            case AULAS_ESTUDIO:
+                costoBasePorHora = 25000;
+                break;
+            case SALONES_EVENTOS:
+                costoBasePorHora = 100000;
+                break;
+            default:
+                throw new Exception("Tipo de instalación desconocido.");
+        }
+
+        double costoTotal;
+
+        switch (usuario.getTipoPersona()) {
+            case EXTERNO:
+                // Usuarios externos pagan el costo completo
+                costoTotal = costoBasePorHora * horasReserva;
+                break;
+
+            case ADMINISTRATIVO:
+            case ESTUDIANTE:
+            case PROFESOR:
+
+                costoTotal = 0;
+                break;
+
+            default:
+                throw new Exception("Tipo de usuario desconocido.");
+        }
+
+        return costoTotal;
     }
 
     @Override

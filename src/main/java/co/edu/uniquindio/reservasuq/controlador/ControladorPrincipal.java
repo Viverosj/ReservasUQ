@@ -105,8 +105,8 @@ public class ControladorPrincipal implements ServiciosReservasUQ {
     }
 
     @Override
-    public boolean verificarRestriccionUsuario(String cedulaPersona, String idInstalacion) {
-        return false;
+    public double costoReservaInstalacion(String cedulaPersona, String idInstalacion, int horasReserva) {
+        return 0;
     }
 
     @Override

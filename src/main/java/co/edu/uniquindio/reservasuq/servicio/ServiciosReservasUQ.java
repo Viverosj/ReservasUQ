@@ -41,8 +41,7 @@ public interface ServiciosReservasUQ {
 
     void enviarRecordatorioReserva(String email, Reserva reserva);
 
-    boolean verificarRestriccionUsuario(String cedulaPersona, String idInstalacion); // Para verificar si el usuario cumple con las restricciones de acceso a una instalación
-
+    double costoReservaInstalacion(String cedulaPersona, String idInstalacion, int horasReserva) throws Exception;
     void definirRestricciones(String idInstalacion, int aforoMaximo, LocalDate horarioInicio, LocalDate horarioFin);
     //(Permite a los administradores configurar restricciones para las instalaciones.)
     List<Persona> listarUsuariosPorTipo(TipoPersona tipo);
