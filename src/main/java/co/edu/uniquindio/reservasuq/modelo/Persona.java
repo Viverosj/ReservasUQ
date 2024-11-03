@@ -1,6 +1,6 @@
 package co.edu.uniquindio.reservasuq.modelo;
 
-import co.edu.uniquindio.reservasuq.modelo.enums.TipoUsuario;
+import co.edu.uniquindio.reservasuq.modelo.enums.TipoPersona;
 import lombok.*;
 
 @AllArgsConstructor
@@ -9,12 +9,12 @@ import lombok.*;
 @Getter
 @Builder
 @ToString
-public class Usuarios {
+public class Persona {
 
     private String cedula;
     private String nombre;
     private String correo;
-    private TipoUsuario tipoUsuario;
+    private TipoPersona tipoPersona;
     private String password;
 
 }

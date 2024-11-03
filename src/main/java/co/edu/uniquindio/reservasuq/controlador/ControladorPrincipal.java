@@ -1,7 +1,7 @@
 package co.edu.uniquindio.reservasuq.controlador;
 import co.edu.uniquindio.reservasuq.modelo.*;
-import co.edu.uniquindio.reservasuq.modelo.enums.TipoUsuario;
-import co.edu.uniquindio.reservasuq.servicio.ServiciosReserva;
+import co.edu.uniquindio.reservasuq.modelo.enums.TipoPersona;
+import co.edu.uniquindio.reservasuq.servicio.ServiciosReservasUQ;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 import java.time.LocalDate;
 import java.util.List;
 
-public class ControladorPrincipal implements ServiciosReserva {
+public class ControladorPrincipal implements ServiciosReservasUQ {
 
     private static ControladorPrincipal INSTANCIA;
     private final ReservasUQ reservasUQ;
@@ -29,18 +29,18 @@ public class ControladorPrincipal implements ServiciosReserva {
     }
 
     @Override
-    public Usuarios login(String correo, String contrasena) throws Exception {
+    public Persona login(String correo, String contrasena) throws Exception {
         return reservasUQ.login(correo, contrasena);
     }
 
     @Override
-    public void registrarUsuario(String cedula, String nombre, String correo, TipoUsuario tipoUsuario, String password) throws Exception {
+    public void registrarPersona(String cedula, String nombre, String correo, TipoPersona tipoPersona, String password) throws Exception {
 
     }
 
     @Override
-    public void registrarUsuario(String cedula, String nombre, TipoUsuario tipoUsuario, String correo, String password) throws Exception {
-        reservasUQ.registrarUsuario(cedula, nombre, tipoUsuario, correo, password);
+    public void registrarUsuario(String cedula, String nombre, TipoPersona tipoUsuario, String correo, String password) throws Exception {
+
     }
 
     @Override
@@ -64,12 +64,12 @@ public class ControladorPrincipal implements ServiciosReserva {
     }
 
     @Override
-    public Usuarios obtenerUsuarios(String cedula, String nombre, String correo, TipoUsuario tipoUsuario, String password) {
+    public Persona obtenerUsuarios(String cedula, String nombre, String correo, TipoPersona tipoUsuario, String password) {
         return null;
     }
 
     @Override
-    public Usuarios validarUsuarios(String cedula, String nombre, String correo, TipoUsuario tipoUsuario, String password) {
+    public Persona validarUsuarios(String cedula, String nombre, String correo, TipoPersona tipoUsuario, String password) {
         return null;
     }
 
@@ -84,12 +84,12 @@ public class ControladorPrincipal implements ServiciosReserva {
     }
 
     @Override
-    public Instalaciones crearEvento() {
+    public Instalacion crearEvento() {
         return null;
     }
 
     @Override
-    public Instalaciones obtenerEvento() {
+    public Instalacion obtenerEvento() {
         return null;
     }
 

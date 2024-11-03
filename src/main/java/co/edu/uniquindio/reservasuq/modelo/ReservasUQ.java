@@ -1,27 +1,27 @@
 package co.edu.uniquindio.reservasuq.modelo;
-import co.edu.uniquindio.reservasuq.modelo.enums.TipoUsuario;
-import co.edu.uniquindio.reservasuq.servicio.ServiciosReserva;
+import co.edu.uniquindio.reservasuq.modelo.enums.TipoPersona;
+import co.edu.uniquindio.reservasuq.servicio.ServiciosReservasUQ;
 import java.time.LocalDate;
 import java.util.List;
+public class ReservasUQ implements ServiciosReservasUQ {
 
-public class ReservasUQ implements ServiciosReserva {
-
-    List<Usuarios> usuarios;
-    List<Instalaciones> instalaciones;
+    List<Persona> usuarios;
+    List<Instalacion> instalaciones;
     List<Reservas> reservas;
 
     @Override
-    public Usuarios login(String correo, String password) throws Exception {
+    public Persona login(String correo, String password) throws Exception {
         return null;
     }
 
     @Override
-    public void registrarUsuario(String cedula, String nombre, String correo, TipoUsuario tipoUsuario, String password) throws Exception {
+    public void registrarPersona(String cedula, String nombre, String correo, TipoPersona tipoPersona, String password) throws Exception {
 
     }
 
+
     @Override
-    public void registrarUsuario(String cedula, String nombre, TipoUsuario tipoUsuario, String correo, String password) throws Exception {
+    public void registrarUsuario(String cedula, String nombre, TipoPersona tipoUsuario, String correo, String password) throws Exception {
 
     }
 
@@ -46,12 +46,12 @@ public class ReservasUQ implements ServiciosReserva {
     }
 
     @Override
-    public Usuarios obtenerUsuarios(String cedula, String nombre, String correo, TipoUsuario tipoUsuario, String password) {
+    public Persona obtenerUsuarios(String cedula, String nombre, String correo, TipoPersona tipoUsuario, String password) {
         return null;
     }
 
     @Override
-    public Usuarios validarUsuarios(String cedula, String nombre, String correo, TipoUsuario tipoUsuario, String password) {
+    public Persona validarUsuarios(String cedula, String nombre, String correo, TipoPersona tipoUsuario, String password) {
         return null;
     }
 
@@ -66,12 +66,12 @@ public class ReservasUQ implements ServiciosReserva {
     }
 
     @Override
-    public Instalaciones crearEvento() {
+    public Instalacion crearEvento() {
         return null;
     }
 
     @Override
-    public Instalaciones obtenerEvento() {
+    public Instalacion obtenerEvento() {
         return null;
     }
 

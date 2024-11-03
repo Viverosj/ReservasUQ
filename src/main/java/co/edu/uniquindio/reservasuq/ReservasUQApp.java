@@ -1,4 +1,4 @@
-package co.edu.uniquindio.reservasuq.app;
+package co.edu.uniquindio.reservasuq;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -10,7 +10,7 @@ import java.io.IOException;
 public class ReservasUQApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(ReservasUQApp.class.getResource(""));
+        FXMLLoader fxmlLoader = new FXMLLoader(ReservasUQApp.class.getResource("inicio.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
         stage.setTitle("Reservas");
         stage.setScene(scene);
@@ -20,4 +20,4 @@ public class ReservasUQApp extends Application {
     public static void main(String[] args) {
         launch();
     }
-}       
+}

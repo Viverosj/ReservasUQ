@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @Builder
 @ToString
-public class Instalaciones {
+public class Instalacion {
 
     private String ID;
     private String nombre;
