@@ -3,7 +3,9 @@ package co.edu.uniquindio.reservasuq.modelo;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,10 +15,9 @@ import java.time.LocalDateTime;
 @ToString
 public class Reserva {
 
-    private String ID;
-    private LocalDateTime fechaReserva;
-    private Persona persona;
-    private Instalacion instalaciones;
-    private double costo;
+    private String idInstalacion;
+    private String cedulaPersona;
+    private LocalDate diaReserva;
+    private String horaReserva;
 
 }

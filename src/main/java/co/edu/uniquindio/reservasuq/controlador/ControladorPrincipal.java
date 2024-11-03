@@ -11,6 +11,7 @@ import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public class ControladorPrincipal implements ServiciosReservasUQ {
@@ -44,18 +45,23 @@ public class ControladorPrincipal implements ServiciosReservasUQ {
     }
 
     @Override
-    public void crearInstalacion(String nombre, int aforo, TipoInstalacion tipoInstalacion, List<Horario> horarios) throws Exception {
+    public void crearInstalacion(String nombre, int aforo, double costo, List<Horario> horarios, TipoInstalacion tipoInstalacion) throws Exception {
 
     }
 
-    //@Override
-    //public void crearInstalacion(String nombre,int aforo, float costo, List<Horario> horarios) throws Exception {
-      //  reservasUQ.crearInstalacion(nombre, aforo, costo, horarios);
-    //}
+    @Override
+    public Reserva crearReserva(String idInstalacion, String cedulaPersona, LocalDate diaReserva, String horaReserva) throws Exception {
+        return null;
+    }
 
     @Override
-    public Reserva crearReserva(String idInstalaciones, String cedulaUsuario, LocalDate diaReserva, String horaReserva) throws Exception {
+    public Instalacion buscarInstalacionPorId(String idInstalacion) {
         return null;
+    }
+
+    @Override
+    public boolean verificarDisponibilidad(Instalacion instalacion, LocalDate diaReserva, String horaReserva) {
+        return false;
     }
 
     @Override
@@ -81,11 +87,6 @@ public class ControladorPrincipal implements ServiciosReservasUQ {
     @Override
     public List<Reserva> obtenerHistorialReservas(String cedulaPersona) {
         return null;
-    }
-
-    @Override
-    public boolean verificarDisponibilidad(String idInstalacion, LocalDate diaReserva, String horaReserva) {
-        return false;
     }
 
     @Override
@@ -135,6 +136,16 @@ public class ControladorPrincipal implements ServiciosReservasUQ {
 
     @Override
     public void actualizarInstalacion(String idInstalacion, int aforo, float costo, List<Horario> horarios) {
+
+    }
+
+    @Override
+    public void gestionarInstalaciones() throws Exception {
+
+    }
+
+    @Override
+    public void gestionarUsuarios() throws Exception {
 
     }
 

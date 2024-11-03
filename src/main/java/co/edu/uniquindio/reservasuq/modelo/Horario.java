@@ -3,6 +3,7 @@ package co.edu.uniquindio.reservasuq.modelo;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 public class Horario {
 
     private String dia;
-    private LocalDateTime horaInicio;
-    private LocalDateTime horaFin;
+    private LocalTime horaInicio;
+    private LocalTime horaFin;
 
 }

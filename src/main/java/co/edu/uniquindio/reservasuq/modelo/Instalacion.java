@@ -14,19 +14,10 @@ import java.util.UUID;
 @ToString
 public class Instalacion {
 
-    private String ID; //se generará automáticamente
     private String nombre;
     private int aforo;
-    private TipoInstalacion tipoInstalacion;
+    private double costo;
     private List<Horario> horarios;
-
-    public Instalacion(String nombre, int aforo, TipoInstalacion tipoInstalacion, List<Horario> horarios) {
-        this.ID = UUID.randomUUID().toString();
-        this.nombre = nombre;
-        this.aforo = aforo;
-        this.tipoInstalacion = tipoInstalacion;
-        this.horarios = horarios;
-    }
-
+    private TipoInstalacion tipoInstalacion;
 
 }

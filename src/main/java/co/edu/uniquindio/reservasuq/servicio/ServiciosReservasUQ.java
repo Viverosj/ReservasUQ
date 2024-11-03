@@ -7,6 +7,7 @@ import co.edu.uniquindio.reservasuq.modelo.enums.TipoInstalacion;
 import co.edu.uniquindio.reservasuq.modelo.enums.TipoPersona;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 public interface ServiciosReservasUQ {
@@ -17,9 +18,14 @@ public interface ServiciosReservasUQ {
 
     Persona obtenerPersona(String cedula);
 
-    void crearInstalacion(String nombre, int aforo, TipoInstalacion tipoInstalacion, List<Horario> horarios) throws Exception;
+    void crearInstalacion(String nombre, int aforo, double costo, List<Horario> horarios,TipoInstalacion tipoInstalacion) throws Exception;
 
-    Reserva crearReserva(String idInstalaciones, String cedulaUsuario, LocalDate diaReserva, String horaReserva) throws Exception;
+    Reserva crearReserva(String idInstalacion, String cedulaPersona, LocalDate diaReserva, String horaReserva) throws Exception;
+
+    Instalacion buscarInstalacionPorId(String idInstalacion);
+
+    boolean verificarDisponibilidad(Instalacion instalacion, LocalDate diaReserva, String horaReserva);
+
     List<Reserva> listarTodasReservas();
     List<Reserva> listarReservasPorPersona(String cedulaUsuario);
     void actualizarDatosPersona(String cedula, String nombre, TipoPersona tipoPersona, String email, String password) throws Exception;
@@ -28,9 +34,6 @@ public interface ServiciosReservasUQ {
     //(Para eliminar usuarios registrados.)
     List<Reserva> obtenerHistorialReservas(String cedulaPersona);
     //(Para que el usuario consulte el historial de sus reservas.)
-
-    boolean verificarDisponibilidad(String idInstalacion, LocalDate diaReserva, String horaReserva);
-    //(Para chequear la disponibilidad de una instalación en un horario específico.)
     List<Horario> obtenerHorariosDisponibles(String idInstalacion, LocalDate diaReserva);
     //(Para listar los horarios disponibles de una instalación en una fecha específica.)
     void cancelarReserva(String idReserva) throws Exception;
@@ -51,5 +54,7 @@ public interface ServiciosReservasUQ {
     //(Para ver todas las instalaciones disponibles.)
     void actualizarInstalacion(String idInstalacion, int aforo, float costo, List<Horario> horarios);
     //(Para modificar los detalles de una instalación.)
+    void gestionarInstalaciones() throws Exception;
+    void gestionarUsuarios() throws Exception;
 
 }

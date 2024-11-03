@@ -6,9 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -85,46 +83,113 @@ public class ReservasUQ implements ServiciosReservasUQ {
     }
 
     @Override
-    public void crearInstalacion(String nombre, int aforo, TipoInstalacion tipoInstalacion, List<Horario> horarios) throws Exception {
-        String mensajesValidacion = "";
+    public void crearInstalacion(String nombre, int aforo, double costo, List<Horario> horarios, TipoInstalacion tipoInstalacion) throws Exception {
 
         if (nombre == null || nombre.isEmpty()) {
-            mensajesValidacion += "El nombre de la instalación no puede estar vacío.\n";
+            throw new Exception("El nombre de la instalación no puede estar vacío.");
         }
-
         if (aforo <= 0) {
-            mensajesValidacion += "La capacidad debe ser un número positivo.\n";
+            throw new Exception("El aforo debe ser mayor a cero.");
         }
-
+        if (costo < 0) {
+            throw new Exception("El costo no puede ser negativo.");
+        }
         if (horarios == null || horarios.isEmpty()) {
-            mensajesValidacion += "La lista de horarios no puede estar vacía.\n";
+            throw new Exception("Debe especificar al menos un horario para la instalación.");
+        }
+        if (tipoInstalacion == null) {
+            throw new Exception("Debe especificar el tipo de instalación.");
         }
 
-        if (!mensajesValidacion.isEmpty()) {
-            throw new Exception(mensajesValidacion);
+        for (Instalacion instalacion : instalaciones) {
+            if (instalacion.getNombre().equalsIgnoreCase(nombre)) {
+                throw new Exception("Ya existe una instalación con ese nombre.");
+            }
         }
 
-        Instalacion instalacion = new Instalacion(nombre, aforo, tipoInstalacion, horarios);
-        instalaciones.add(instalacion);
+        Instalacion nuevaInstalacion = Instalacion.builder()
+                .nombre(nombre)
+                .aforo(aforo)
+                .costo(costo)
+                .horarios(horarios)
+                .tipoInstalacion(tipoInstalacion)
+                .build();
+
+        instalaciones.add(nuevaInstalacion);
     }
 
     @Override
-    public Reserva crearReserva(String ID, String cedulaPersona, LocalDate diaReserva, String horaReserva) throws Exception {
+    public Reserva crearReserva(String idInstalacion, String cedulaPersona, LocalDate diaReserva, String horaReserva) throws Exception {
+
+        if (idInstalacion == null || idInstalacion.isEmpty()) {
+            throw new Exception("El ID de la instalación no puede estar vacío.");
+        }
+        if (cedulaPersona == null || cedulaPersona.isEmpty()) {
+            throw new Exception("La cédula de la persona no puede estar vacía.");
+        }
+        if (diaReserva == null || diaReserva.isBefore(LocalDate.now().plusDays(2))) {
+            throw new Exception("La reserva debe hacerse con al menos 2 días de anticipación.");
+        }
+        if (horaReserva == null || horaReserva.isEmpty()) {
+            throw new Exception("La hora de la reserva no puede estar vacía.");
+        }
+
+        Instalacion instalacion = buscarInstalacionPorId(idInstalacion);
+        if (instalacion == null) {
+            throw new Exception("La instalación especificada no existe.");
+        }
+
+        Persona persona = obtenerPersona(cedulaPersona);
+        if (persona == null) {
+            throw new Exception("La persona especificada no existe.");
+        }
+
+        if (!verificarDisponibilidad(instalacion, diaReserva, horaReserva)) {
+            throw new Exception("La instalación no está disponible en el horario solicitado.");
+        }
+
+        Reserva nuevaReserva = Reserva.builder()
+                .idInstalacion(idInstalacion)
+                .cedulaPersona(cedulaPersona)
+                .diaReserva(diaReserva)
+                .horaReserva(horaReserva)
+                .build();
+
+        reservas.add(nuevaReserva);
+
+        return nuevaReserva;
+    }
+
+    @Override
+    public Instalacion buscarInstalacionPorId(String idInstalacion) {
+        for (Instalacion instalacion : instalaciones) {
+            if (instalacion.getNombre().equalsIgnoreCase(idInstalacion)) {
+                return instalacion;
+            }
+        }
         return null;
     }
+
+    @Override
+    public boolean verificarDisponibilidad(Instalacion instalacion, LocalDate diaReserva, String horaReserva) {
+        for (Reserva reserva : reservas) {
+            if (reserva.getIdInstalacion().equals(instalacion.getNombre()) &&
+                    reserva.getDiaReserva().equals(diaReserva) &&
+                    reserva.getHoraReserva().equals(horaReserva)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     @Override
     public List<Reserva> listarTodasReservas() {
         return reservas;
     }
+
     @Override
-    public List<Reserva> listarReservasPorPersona(String cedulaPersona) {
-        List<Reserva> reservasPersona = new ArrayList<>();
-        for (Reserva reserva : reservas) {
-            if (reserva.getPersona().getCedula().equals(cedulaPersona)) {
-                reservasPersona.add(reserva);
-            }
-        }
-        return reservasPersona;
+    public List<Reserva> listarReservasPorPersona(String cedulaUsuario) {
+        return null;
     }
 
     @Override
@@ -140,11 +205,6 @@ public class ReservasUQ implements ServiciosReservasUQ {
     @Override
     public List<Reserva> obtenerHistorialReservas(String cedulaPersona) {
         return null;
-    }
-
-    @Override
-    public boolean verificarDisponibilidad(String idInstalacion, LocalDate diaReserva, String horaReserva) {
-        return false;
     }
 
     @Override
@@ -195,5 +255,13 @@ public class ReservasUQ implements ServiciosReservasUQ {
     @Override
     public void actualizarInstalacion(String idInstalacion, int aforo, float costo, List<Horario> horarios) {
 
+    }
+
+    @Override
+    public void gestionarInstalaciones() throws Exception {
+    }
+
+    @Override
+    public void gestionarUsuarios() throws Exception {
     }
 }
