@@ -42,15 +42,20 @@ public interface ServiciosReservasUQ {
     void enviarRecordatorioReserva(String email, Reserva reserva);
 
     double costoReservaInstalacion(String cedulaPersona, String idInstalacion, int horasReserva) throws Exception;
-    void definirRestricciones(String idInstalacion, int aforoMaximo, LocalDate horarioInicio, LocalDate horarioFin);
-    //(Permite a los administradores configurar restricciones para las instalaciones.)
-    List<Persona> listarUsuariosPorTipo(TipoPersona tipo);
-    //(Para listar usuarios por tipo: estudiantes, docentes, administrativos, externos.)
-    List<Instalacion> listarInstalaciones();
-    //(Para ver todas las instalaciones disponibles.)
-    void actualizarInstalacion(String idInstalacion, int aforo, float costo, List<Horario> horarios);
-    //(Para modificar los detalles de una instalación.)
-    void gestionarInstalaciones() throws Exception;
-    void gestionarUsuarios() throws Exception;
 
+    List<Instalacion> listarInstalaciones();
+
+    void agregarUsuario(String cedula, String nombre, String email, TipoPersona tipo) throws Exception;
+    void actualizarUsuario(String cedula, String nombre, String email, TipoPersona tipo) throws Exception;
+    void eliminarUsuario(String cedula) throws Exception;
+
+    void agregarInstalacion(String nombre, int aforo, double costo, List<Horario> horarios, TipoInstalacion tipoInstalacion) throws Exception;
+
+    void actualizarInstalacion(String nombre, Integer nuevoAforo, Double nuevoCosto, List<Horario> nuevosHorarios) throws Exception;
+
+    void eliminarInstalacion(String nombre) throws Exception;
+
+    void asignarHorariosInstalacion(String nombre, List<Horario> horarios) throws Exception;
+
+    void establecerCapacidadInstalacion(String nombre, int nuevoAforo) throws Exception;
 }

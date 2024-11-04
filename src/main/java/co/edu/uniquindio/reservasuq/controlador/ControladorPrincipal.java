@@ -110,36 +110,49 @@ public class ControladorPrincipal implements ServiciosReservasUQ {
     }
 
     @Override
-    public void definirRestricciones(String idInstalacion, int aforoMaximo, LocalDate horarioInicio, LocalDate horarioFin) {
-
-    }
-
-    @Override
-    public List<Persona> listarUsuariosPorTipo(TipoPersona tipo) {
-        return null;
-    }
-
-    @Override
     public List<Instalacion> listarInstalaciones() {
         return null;
     }
 
     @Override
-    public void actualizarInstalacion(String idInstalacion, int aforo, float costo, List<Horario> horarios) {
+    public void agregarUsuario(String cedula, String nombre, String email, TipoPersona tipo) throws Exception {
 
     }
 
     @Override
-    public void gestionarInstalaciones() throws Exception {
+    public void actualizarUsuario(String cedula, String nombre, String email, TipoPersona tipo) throws Exception {
 
     }
 
     @Override
-    public void gestionarUsuarios() throws Exception {
+    public void eliminarUsuario(String cedula) throws Exception {
 
     }
 
-    //TODO Completar con el resto de métodos necesarios para la aplicación
+    @Override
+    public void agregarInstalacion(String nombre, int aforo, double costo, List<Horario> horarios, TipoInstalacion tipoInstalacion) throws Exception {
+
+    }
+
+    @Override
+    public void actualizarInstalacion(String nombre, Integer nuevoAforo, Double nuevoCosto, List<Horario> nuevosHorarios) throws Exception {
+
+    }
+
+    @Override
+    public void eliminarInstalacion(String nombre) throws Exception {
+
+    }
+
+    @Override
+    public void asignarHorariosInstalacion(String nombre, List<Horario> horarios) throws Exception {
+
+    }
+
+    @Override
+    public void establecerCapacidadInstalacion(String nombre, int nuevoAforo) throws Exception {
+
+    }
 
     public void mostrarAlerta(String mensaje, String titulo, Alert.AlertType tipo) {
         Alert alert = new Alert(tipo);

@@ -348,53 +348,140 @@ public class ReservasUQ implements ServiciosReservasUQ {
                 throw new Exception("Tipo de instalación desconocido.");
         }
 
-        double costoTotal;
-
-        switch (usuario.getTipoPersona()) {
-            case EXTERNO:
+        double costoTotal = switch (usuario.getTipoPersona()) {
+            case EXTERNO ->
                 // Usuarios externos pagan el costo completo
-                costoTotal = costoBasePorHora * horasReserva;
-                break;
-
-            case ADMINISTRATIVO:
-            case ESTUDIANTE:
-            case PROFESOR:
-
-                costoTotal = 0;
-                break;
-
-            default:
-                throw new Exception("Tipo de usuario desconocido.");
-        }
+                    costoBasePorHora * horasReserva;
+            case ADMINISTRATIVO, ESTUDIANTE, PROFESOR -> 0;
+            default -> throw new Exception("Tipo de usuario desconocido.");
+        };
 
         return costoTotal;
     }
 
     @Override
-    public void definirRestricciones(String idInstalacion, int aforoMaximo, LocalDate horarioInicio, LocalDate horarioFin) {
+    public void agregarInstalacion(String nombre, int aforo, double costo, List<Horario> horarios, TipoInstalacion tipoInstalacion) throws Exception {
+        if (buscarInstalacionPorNombre(nombre) != null) {
+            throw new Exception("Ya existe una instalación con el nombre proporcionado.");
+        }
 
+        if (nombre == null || nombre.isEmpty() || aforo <= 0 || costo < 0 || tipoInstalacion == null || horarios == null || horarios.isEmpty()) {
+            throw new Exception("Datos inválidos para la creación de la instalación.");
+        }
+
+        Instalacion nuevaInstalacion = new Instalacion(nombre, aforo, costo, horarios, tipoInstalacion);
+        instalaciones.add(nuevaInstalacion);
     }
 
     @Override
-    public List<Persona> listarUsuariosPorTipo(TipoPersona tipo) {
+    public void actualizarInstalacion(String nombre, Integer nuevoAforo, Double nuevoCosto, List<Horario> nuevosHorarios) throws Exception {
+        Instalacion instalacion = buscarInstalacionPorNombre(nombre);
+        if (instalacion == null) {
+            throw new Exception("La instalación no existe.");
+        }
+
+        if (nuevoAforo != null && nuevoAforo > 0) {
+            instalacion.setAforo(nuevoAforo);
+        }
+        if (nuevoCosto != null && nuevoCosto >= 0) {
+            instalacion.setCosto(nuevoCosto);
+        }
+        if (nuevosHorarios != null && !nuevosHorarios.isEmpty()) {
+            instalacion.setHorarios(nuevosHorarios);
+        }
+    }
+
+    @Override
+    public void eliminarInstalacion(String nombre) throws Exception {
+        Instalacion instalacion = buscarInstalacionPorNombre(nombre);
+        if (instalacion == null) {
+            throw new Exception("La instalación no existe.");
+        }
+
+        instalaciones.remove(instalacion);
+    }
+
+    @Override
+    public void asignarHorariosInstalacion(String nombre, List<Horario> horarios) throws Exception {
+        Instalacion instalacion = buscarInstalacionPorNombre(nombre);
+        if (instalacion == null) {
+            throw new Exception("La instalación no existe.");
+        }
+
+        if (horarios == null || horarios.isEmpty()) {
+            throw new Exception("Debe proporcionar una lista de horarios válida.");
+        }
+
+        instalacion.setHorarios(horarios);
+    }
+
+    @Override
+    public void establecerCapacidadInstalacion(String nombre, int nuevoAforo) throws Exception {
+        Instalacion instalacion = buscarInstalacionPorNombre(nombre);
+        if (instalacion == null) {
+            throw new Exception("La instalación no existe.");
+        }
+
+        if (nuevoAforo <= 0) {
+            throw new Exception("La capacidad de aforo debe ser mayor a cero.");
+        }
+
+        instalacion.setAforo(nuevoAforo);
+    }
+
+    public Instalacion buscarInstalacionPorNombre(String nombre) {
+        for (Instalacion instalacion : instalaciones) {
+            if (instalacion.getNombre().equalsIgnoreCase(nombre)) {
+                return instalacion;
+            }
+        }
         return null;
     }
 
     @Override
     public List<Instalacion> listarInstalaciones() {
-        return null;
+        return instalaciones;
     }
 
     @Override
-    public void actualizarInstalacion(String idInstalacion, int aforo, float costo, List<Horario> horarios) {
+    public void agregarUsuario(String cedula, String nombre, String correo, TipoPersona tipo) throws Exception {
+
+        if (obtenerPersona(cedula) != null) {
+            throw new Exception("Ya existe un usuario con esa cédula.");
+        }
+
+        Persona nuevoUsuario = new Persona();
+        nuevoUsuario.setCedula(cedula);
+        nuevoUsuario.setNombre(nombre);
+        nuevoUsuario.setCorreo(correo);
+        nuevoUsuario.setTipoPersona(tipo);
+
+        personas.add(nuevoUsuario);
+
     }
 
     @Override
-    public void gestionarInstalaciones() throws Exception {
+    public void actualizarUsuario(String cedula, String nombre, String correo, TipoPersona tipo) throws Exception {
+        Persona usuario = obtenerPersona(cedula);
+        if (usuario == null) {
+            throw new Exception("usuario no encontrado.");
+        }
+        usuario.setNombre(nombre);
+        usuario.setCorreo(correo);
+        usuario.setTipoPersona(tipo);
+
     }
 
     @Override
-    public void gestionarUsuarios() throws Exception {
+    public void eliminarUsuario(String cedula) throws Exception {
+
+        Persona usuario = obtenerPersona(cedula);
+        if (usuario == null) {
+            throw new Exception("Usuario no encontrado.");
+        }
+
+        personas.remove(usuario);
     }
+
 
 }
