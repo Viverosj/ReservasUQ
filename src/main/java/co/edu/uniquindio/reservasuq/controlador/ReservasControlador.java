@@ -14,9 +14,8 @@ import java.util.ResourceBundle;
 public class ReservasControlador implements Observable, Initializable {
 
     @FXML private DatePicker txtDiaReserva;
-    @FXML private TextField txtEmail;
-    @FXML private ComboBox<String> cbHoraInicio;
-    @FXML private ComboBox<String> cbHoraFin;
+    @FXML private TextField txtCedula;
+    @FXML private ComboBox<String> cbHoraReserva;
     @FXML private TextField txtIdInstalacion;
     private final PrincipalControlador principalControlador;
     private Observable observable;
@@ -35,11 +34,10 @@ public class ReservasControlador implements Observable, Initializable {
         try {
             String idInstalacion = txtIdInstalacion.getText();
             LocalDate diaReserva = txtDiaReserva.getValue();
-            String correoPersona = txtEmail.getText();
-            String horaInicio = cbHoraInicio.getValue();
-            String horaFin = cbHoraFin.getValue();
+            String cedulaPersona = txtCedula.getText();
+            String horaReserva = cbHoraReserva.getValue();
 
-            principalControlador.crearReserva(idInstalacion, correoPersona, diaReserva, horaInicio, horaFin);
+            principalControlador.crearReserva(idInstalacion, cedulaPersona, diaReserva, horaReserva);
             limpiarFormularioReserva();
             principalControlador.mostrarAlerta("La reserva ha sido creada y la notificación ha sido enviada.", Alert.AlertType.INFORMATION);
         } catch (Exception e) {
@@ -50,10 +48,10 @@ public class ReservasControlador implements Observable, Initializable {
     private void limpiarFormularioReserva() {
         txtIdInstalacion.setText("");
         txtDiaReserva.setValue(null);
-        txtEmail.setText("");
-        cbHoraInicio.setValue(null);
-        cbHoraFin.setValue(null);
+        txtCedula.setText("");
+        cbHoraReserva.setValue(null);
     }
+
     @Override
     public void notificar() {
 
@@ -61,7 +59,6 @@ public class ReservasControlador implements Observable, Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        cbHoraInicio.setItems(FXCollections.observableArrayList(principalControlador.generarHorarios()));
-        cbHoraFin.setItems(FXCollections.observableArrayList(principalControlador.generarHorarios()));
+        cbHoraReserva.setItems(FXCollections.observableArrayList(principalControlador.generarHorarios()));
     }
 }

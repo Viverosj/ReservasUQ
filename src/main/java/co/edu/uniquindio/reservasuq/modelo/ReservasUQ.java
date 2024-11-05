@@ -139,9 +139,9 @@ public class ReservasUQ implements ServiciosReservasUQ {
     }
 
     @Override
-    public Reserva obtenerReservasPersona(String correoPersona) throws Exception {
+    public Reserva obtenerReservasPersona(String cedulaPersona) throws Exception {
         for(int i = 0; i < reservas.size(); i++){
-            if(reservas.get(i).getCorreoPersona().equals(correoPersona)){
+            if(reservas.get(i).getCedulaPersona().equals(cedulaPersona)){
                 return reservas.get(i);
             }
         }
@@ -149,22 +149,19 @@ public class ReservasUQ implements ServiciosReservasUQ {
     }
 
     @Override
-    public Reserva crearReserva(String idInstalacion, String correoPersona, LocalDate diaReserva, String horaInicio, String horaFin) throws Exception {
+    public Reserva crearReserva(String idInstalacion, String cedulapersona, LocalDate diaReserva, String horaReserva) throws Exception {
 
         if (idInstalacion == null || idInstalacion.isEmpty()) {
             throw new Exception("El ID de la instalación no puede estar vacío.");
         }
-        if (correoPersona == null || correoPersona.isEmpty()) {
-            throw new Exception("El correo de la persona no puede estar vacía.");
+        if (cedulapersona == null || cedulapersona.isEmpty()) {
+            throw new Exception("La cédula de la persona no puede estar vacía.");
         }
         if (diaReserva == null || diaReserva.isBefore(LocalDate.now().plusDays(2))) {
             throw new Exception("La reserva debe hacerse con al menos 2 días de anticipación.");
         }
-        if (horaInicio == null || horaInicio.isEmpty()) {
+        if (horaReserva == null || horaReserva.isEmpty()) {
             throw new Exception("La hora de inicio de la reserva no puede estar vacía.");
-        }
-        if (horaFin == null || horaFin.isEmpty()) {
-            throw new Exception("La hora de fin la reserva no puede estar vacía.");
         }
 
         Instalacion instalacion = buscarInstalacionPorId(idInstalacion);
@@ -172,20 +169,20 @@ public class ReservasUQ implements ServiciosReservasUQ {
             throw new Exception("La instalación especificada no existe.");
         }
 
-        Persona persona = obtenerPersona(correoPersona);
+        Persona persona = obtenerPersona(cedulapersona);
         if (persona == null) {
             throw new Exception("La persona especificada no existe.");
         }
 
-        if (!verificarDisponibilidad(instalacion, diaReserva, horaInicio)) {
+        if (!verificarDisponibilidad(instalacion, diaReserva, horaReserva)) {
             throw new Exception("La instalación no está disponible en el horario solicitado.");
         }
 
         Reserva nuevaReserva = Reserva.builder()
                 .idInstalacion(idInstalacion)
-                .correoPersona(correoPersona)
+                .cedulaPersona(cedulapersona)
                 .diaReserva(diaReserva)
-                .horaInicio(horaInicio)
+                .horaReserva(horaReserva)
                 .build();
 
         reservas.add(nuevaReserva);
@@ -208,7 +205,7 @@ public class ReservasUQ implements ServiciosReservasUQ {
         for (Reserva reserva : reservas) {
             if (reserva.getIdInstalacion().equals(instalacion.getNombre()) &&
                     reserva.getDiaReserva().equals(diaReserva) &&
-                    reserva.getHoraInicio().equals(horaReserva)) {
+                    reserva.getHoraReserva().equals(horaReserva)) {
                 return false;
             }
         }
@@ -224,7 +221,7 @@ public class ReservasUQ implements ServiciosReservasUQ {
     public List<Reserva> listarReservasPorPersona(String cedulaPersona) {
         List<Reserva> reservasPersona = new ArrayList<>();
         for (Reserva reserva : reservas) {
-            if (reserva.getCorreoPersona().equals(reserva.getCorreoPersona())) {
+            if (reserva.getCedulaPersona().equals(reserva.getCedulaPersona())) {
                 reservasPersona.add(reserva);
             }
         }
@@ -236,7 +233,7 @@ public class ReservasUQ implements ServiciosReservasUQ {
         List<Reserva> reservasPersona = new ArrayList<>();
 
         for (Reserva reserva : reservas) {
-            if (reserva.getCorreoPersona().equals(reserva.getCorreoPersona())) {
+            if (reserva.getCedulaPersona().equals(reserva.getCedulaPersona())) {
                 reservasPersona.add(reserva);
             }
         }
@@ -314,8 +311,7 @@ public class ReservasUQ implements ServiciosReservasUQ {
                         Universidad del Quindío""",
                 reserva.getIdInstalacion(),
                 reserva.getDiaReserva(),
-                reserva.getHoraInicio(),
-                reserva.getHoraFin());
+                reserva.getHoraReserva());
 
         EnvioEmail.enviarNotificacion(email, asunto,mensaje);
     }
@@ -337,8 +333,7 @@ public class ReservasUQ implements ServiciosReservasUQ {
                         Universidad del Quindío""",
                 reserva.getIdInstalacion(),
                 reserva.getDiaReserva(),
-                reserva.getHoraInicio(),
-                reserva.getHoraFin());
+                reserva.getHoraReserva());
 
         EnvioEmail.enviarNotificacion(email, asunto, mensaje);
     }

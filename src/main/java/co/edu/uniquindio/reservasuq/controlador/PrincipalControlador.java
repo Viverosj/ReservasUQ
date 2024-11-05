@@ -66,8 +66,8 @@ public class PrincipalControlador implements ServiciosReservasUQ {
     }
 
     @Override
-    public Reserva crearReserva(String idInstalacion, String correoPersona, LocalDate diaReserva, String horaInicio, String horaFin) throws Exception {
-        return reservasUQ.crearReserva(idInstalacion, correoPersona,diaReserva, horaInicio, horaFin);
+    public Reserva crearReserva(String idInstalacion, String cedulaPersona, LocalDate diaReserva, String horaReserva) throws Exception {
+        return reservasUQ.crearReserva(idInstalacion, cedulaPersona, diaReserva, horaReserva);
     }
 
     @Override

@@ -18,18 +18,16 @@ public class Reserva {
 
     private String id;
     private String idInstalacion;
-    private String correoPersona;
+    private String cedulaPersona;
     private LocalDate diaReserva;
-    private String horaInicio;
-    private String horaFin;
+    private String horaReserva;
 
-    public Reserva(String idInstalacion, String correoPersona, LocalDate diaReserva, LocalTime horaInicio, LocalTime horaFin) {
+    public Reserva(String idInstalacion, String cedulaPersona, LocalDate diaReserva, String horaReserva) {
         this.id = UUID.randomUUID().toString();
         this.idInstalacion = idInstalacion;
-        this.correoPersona = correoPersona;
+        this.cedulaPersona = cedulaPersona;
         this.diaReserva = diaReserva;
-        this.horaInicio = String.valueOf(horaInicio);
-        this.horaFin = String.valueOf(horaFin);
+        this.horaReserva = String.valueOf(horaReserva);
     }
 
 
