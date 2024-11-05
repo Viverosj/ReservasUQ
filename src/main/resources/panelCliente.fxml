@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="600.0" prefWidth="800.0" spacing="30.0" style="-fx-padding: 30" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.reservasuq.controlador.PanelClienteControlador">
+
+    <Label text="Historial de Reservas">
+        <font>
+            <Font size="18.0" />
+        </font>
+    </Label>
+    <HBox>
+        <Label fx:id="mensajeBienvenida" prefHeight="20.0" prefWidth="487.0">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Label>
+
+        <Label fx:id="numeroCuenta" alignment="CENTER_RIGHT" prefHeight="20.0" prefWidth="280.0">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Label>
+    </HBox>
+   <TableView fx:id="tablaHistorial" prefHeight="350.0" prefWidth="740.0">
+     <columns>
+         <TableColumn fx:id="colIdInstalacion" prefWidth="219.99994504451752" text="ID Instalación" />
+         <TableColumn fx:id="colDiaReserva" prefWidth="183.99993896484375" text="Día de reserva" />
+         <TableColumn fx:id="colHoraInicio" prefWidth="175.99990844726562" text="Hora de inicio" />
+         <TableColumn fx:id="colHoraFin" prefWidth="160.800048828125" text="Hora de fin" />
+     </columns>
+   </TableView>
+
+    <HBox alignment="CENTER_LEFT" spacing="20.0">
+        <Button fx:id="reservar" minHeight="40.0" minWidth="130.0" onAction="#reservar" style="-fx-background-color: #00807a; -fx-text-fill: white" text="Reservar" />
+      <Button fx:id="cancelarReserva" minHeight="40.0" minWidth="130.0" onAction="#cancelarReserva" style="-fx-background-color: #00807a; -fx-text-fill: white" text="Cancelar Reserva" />
+    </HBox>
+</VBox>

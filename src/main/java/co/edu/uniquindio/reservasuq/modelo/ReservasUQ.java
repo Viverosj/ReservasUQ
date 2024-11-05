@@ -14,8 +14,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 
@@ -24,6 +22,18 @@ public class ReservasUQ implements ServiciosReservasUQ {
     private List<Persona> personas;
     private List<Instalacion> instalaciones;
     private List<Reserva> reservas;
+
+
+    public ReservasUQ(){
+        try {
+            this.personas = new ArrayList<>();
+            this.instalaciones = new ArrayList<>();
+            this.reservas = new ArrayList<>();
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
+    }
 
     @Override
     public Persona login(String correo, String password) throws Exception {
@@ -40,11 +50,11 @@ public class ReservasUQ implements ServiciosReservasUQ {
     }
 
     @Override
-    public void registrarPersona(String cedula, String nombre, TipoPersona tipoPersona,String correo, String password) throws Exception {
+    public Persona registrarPersona(String cedula, String nombre, TipoPersona tipoPersona, String correo, String password) throws Exception {
         String mensajesValidacion = "";
 
         if(cedula == null || cedula.isEmpty()){
-            mensajesValidacion += "Debe ingresar la cedula\n";
+            mensajesValidacion += "Debe ingresar la cédula\n";
         }
 
         if(nombre == null || nombre.isEmpty()){
@@ -67,7 +77,6 @@ public class ReservasUQ implements ServiciosReservasUQ {
             throw new Exception("Ya existe un paciente con la identificación ingresada");
         }
 
-
         Persona persona = Persona.builder()
                 .tipoPersona(tipoPersona)
                 .cedula(cedula)
@@ -76,15 +85,21 @@ public class ReservasUQ implements ServiciosReservasUQ {
                 .build();
 
         personas.add(persona);
+        return persona;
     }
     @Override
-    public Persona obtenerPersona(String cedula) {
-        for (Persona paciente: personas) {
-            if(paciente.getCedula().equals(cedula)){
-                return paciente;
+    public Persona obtenerPersona(String cedula) throws Exception {
+        for (Persona persona: personas) {
+            if(persona.getCedula().equals(cedula)){
+                return persona;
             }
         }
         return null;
+    }
+
+    @Override
+    public ArrayList<Persona> listarPersonas() throws Exception {
+        return new ArrayList<Persona>(personas);
     }
 
     @Override
@@ -124,19 +139,32 @@ public class ReservasUQ implements ServiciosReservasUQ {
     }
 
     @Override
-    public Reserva crearReserva(String idInstalacion, String cedulaPersona, LocalDate diaReserva, String horaReserva) throws Exception {
+    public Reserva obtenerReservasPersona(String correoPersona) throws Exception {
+        for(int i = 0; i < reservas.size(); i++){
+            if(reservas.get(i).getCorreoPersona().equals(correoPersona)){
+                return reservas.get(i);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Reserva crearReserva(String idInstalacion, String correoPersona, LocalDate diaReserva, String horaInicio, String horaFin) throws Exception {
 
         if (idInstalacion == null || idInstalacion.isEmpty()) {
             throw new Exception("El ID de la instalación no puede estar vacío.");
         }
-        if (cedulaPersona == null || cedulaPersona.isEmpty()) {
-            throw new Exception("La cédula de la persona no puede estar vacía.");
+        if (correoPersona == null || correoPersona.isEmpty()) {
+            throw new Exception("El correo de la persona no puede estar vacía.");
         }
         if (diaReserva == null || diaReserva.isBefore(LocalDate.now().plusDays(2))) {
             throw new Exception("La reserva debe hacerse con al menos 2 días de anticipación.");
         }
-        if (horaReserva == null || horaReserva.isEmpty()) {
-            throw new Exception("La hora de la reserva no puede estar vacía.");
+        if (horaInicio == null || horaInicio.isEmpty()) {
+            throw new Exception("La hora de inicio de la reserva no puede estar vacía.");
+        }
+        if (horaFin == null || horaFin.isEmpty()) {
+            throw new Exception("La hora de fin la reserva no puede estar vacía.");
         }
 
         Instalacion instalacion = buscarInstalacionPorId(idInstalacion);
@@ -144,20 +172,20 @@ public class ReservasUQ implements ServiciosReservasUQ {
             throw new Exception("La instalación especificada no existe.");
         }
 
-        Persona persona = obtenerPersona(cedulaPersona);
+        Persona persona = obtenerPersona(correoPersona);
         if (persona == null) {
             throw new Exception("La persona especificada no existe.");
         }
 
-        if (!verificarDisponibilidad(instalacion, diaReserva, horaReserva)) {
+        if (!verificarDisponibilidad(instalacion, diaReserva, horaInicio)) {
             throw new Exception("La instalación no está disponible en el horario solicitado.");
         }
 
         Reserva nuevaReserva = Reserva.builder()
                 .idInstalacion(idInstalacion)
-                .cedulaPersona(cedulaPersona)
+                .correoPersona(correoPersona)
                 .diaReserva(diaReserva)
-                .horaInicio(horaReserva)
+                .horaInicio(horaInicio)
                 .build();
 
         reservas.add(nuevaReserva);
@@ -166,7 +194,7 @@ public class ReservasUQ implements ServiciosReservasUQ {
     }
 
     @Override
-    public Instalacion buscarInstalacionPorId(String idInstalacion) {
+    public Instalacion buscarInstalacionPorId(String idInstalacion) throws Exception{
         for (Instalacion instalacion : instalaciones) {
             if (instalacion.getNombre().equalsIgnoreCase(idInstalacion)) {
                 return instalacion;
@@ -196,7 +224,7 @@ public class ReservasUQ implements ServiciosReservasUQ {
     public List<Reserva> listarReservasPorPersona(String cedulaPersona) {
         List<Reserva> reservasPersona = new ArrayList<>();
         for (Reserva reserva : reservas) {
-            if (reserva.getCedulaPersona().equals(cedulaPersona)) {
+            if (reserva.getCorreoPersona().equals(reserva.getCorreoPersona())) {
                 reservasPersona.add(reserva);
             }
         }
@@ -208,7 +236,7 @@ public class ReservasUQ implements ServiciosReservasUQ {
         List<Reserva> reservasPersona = new ArrayList<>();
 
         for (Reserva reserva : reservas) {
-            if (reserva.getCedulaPersona().equals(cedulaPersona)) {
+            if (reserva.getCorreoPersona().equals(reserva.getCorreoPersona())) {
                 reservasPersona.add(reserva);
             }
         }
@@ -273,14 +301,17 @@ public class ReservasUQ implements ServiciosReservasUQ {
     public void enviarNotificacionReserva(String email, Reserva reserva) {
 
         String asunto = "Confirmación de Reserva para " + reserva.getIdInstalacion();
-        String mensaje = String.format("Estimado usuario,\n\n" +
-                        "Su reserva para la instalación %s ha sido confirmada.\n" +
-                        "Detalles de la reserva:\n" +
-                        " - Fecha: %s\n" +
-                        " - Hora de inicio: %s\n" +
-                        " - Hora de fin: %s\n\n" +
-                        "Gracias por utilizar nuestro sistema de reservas.\n" +
-                        "Universidad del Quindío",
+        String mensaje = String.format("""
+                        Estimado usuario,
+
+                        Su reserva para la instalación %s ha sido confirmada.
+                        Detalles de la reserva:
+                         - Fecha: %s
+                         - Hora de inicio: %s
+                         - Hora de fin: %s
+
+                        Gracias por utilizar nuestro sistema de reservas.
+                        Universidad del Quindío""",
                 reserva.getIdInstalacion(),
                 reserva.getDiaReserva(),
                 reserva.getHoraInicio(),
@@ -293,14 +324,17 @@ public class ReservasUQ implements ServiciosReservasUQ {
     public void enviarRecordatorioReserva(String email, Reserva reserva) {
 
         String asunto = "Recordatorio de Reserva para " + reserva.getIdInstalacion();
-        String mensaje = String.format("Estimado usuario,\n\n" +
-                        "Le recordamos que tiene una reserva programada para la instalación %s.\n" +
-                        "Detalles de la reserva:\n" +
-                        " - Fecha: %s\n" +
-                        " - Hora de inicio: %s\n" +
-                        " - Hora de fin: %s\n\n" +
-                        "Por favor, asegúrese de llegar a tiempo para evitar inconvenientes.\n" +
-                        "Universidad del Quindío",
+        String mensaje = String.format("""
+                        Estimado usuario,
+
+                        Le recordamos que tiene una reserva programada para la instalación %s.
+                        Detalles de la reserva:
+                         - Fecha: %s
+                         - Hora de inicio: %s
+                         - Hora de fin: %s
+
+                        Por favor, asegúrese de llegar a tiempo para evitar inconvenientes.
+                        Universidad del Quindío""",
                 reserva.getIdInstalacion(),
                 reserva.getDiaReserva(),
                 reserva.getHoraInicio(),
@@ -483,5 +517,19 @@ public class ReservasUQ implements ServiciosReservasUQ {
         personas.remove(usuario);
     }
 
+    @Override
+    public List<String> generarHorarios() {
+        List<String> horarios = new ArrayList<>();
+        for (int i = 8; i < 18; i++) {
+            if(i < 10){
+                horarios.add("0" + i + ":00");
+                horarios.add("0" + i + ":30");
+            }else{
+                horarios.add(i + ":00");
+                horarios.add(i + ":30");
+            }
+        }
+        return horarios;
+    }
 
 }

@@ -16,7 +16,7 @@ public class ReservasUQApp extends Application {
 
         Scene scene = new Scene(parent);
         stage.setScene(scene);
-        stage.setTitle("Banco");
+        stage.setTitle("ReservasUq");
         stage.setResizable(false);
         stage.show();
     }

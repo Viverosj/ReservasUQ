@@ -10,7 +10,7 @@ public class Sesion {
 
     private Persona persona;
 
-    private Sesion() {
+    public Sesion() {
     }
     public static Sesion getInstancia() {
         if (INSTANCIA == null) {
