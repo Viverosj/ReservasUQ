@@ -23,6 +23,9 @@ public interface ServiciosReservasUQ {
     List<Reserva> listarReservasPorPersona(String cedulaPersona);
     List<Reserva> obtenerHistorialReservas(String cedulaPersona);
     List<Horario> obtenerHorariosDisponibles(String idInstalacion, LocalDate diaReserva) throws Exception;
+
+    boolean hayDisponibilidad(LocalDate diaReserva, String horaReserva, String idInstalacion);
+
     void cancelarReserva(String idReserva) throws Exception;
     List<Reserva> listarReservasPorInstalacion(String idInstalacion);
     void enviarNotificacionReserva(String email, Reserva reserva);
