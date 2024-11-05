@@ -33,12 +33,15 @@ public class PanelClienteControlador implements Observable, Initializable {
     private Observable observable;
     private final Sesion sesion = Sesion.getInstancia();
     Persona persona = sesion.getPersona();
-
     Reserva reserva = principalControlador.obtenerReservasPersona(persona.getCedula());
+
     public PanelClienteControlador() throws Exception {
         this.principalControlador = PrincipalControlador.getInstancia();
     }
 
+    public void inicializarObservable(Observable observable) {
+        this.observable = observable;
+    }
     public void inicializarValores(Persona persona){
         try {
             if(persona != null){
@@ -51,7 +54,7 @@ public class PanelClienteControlador implements Observable, Initializable {
     }
 
     public void mostrarMensajePanel(){
-        mensajeBienvenida.setText(persona.getNombre() + ", bienvenido a su historial de reservas");
+        mensajeBienvenida.setText(persona.getNombre() + ", bienvenido a su historial y gestión de reservas");
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -69,7 +72,7 @@ public class PanelClienteControlador implements Observable, Initializable {
 
     private void setConsultarHistorial() {
         if (persona != null) {
-            tablaHistorial.setItems(FXCollections.observableArrayList(principalControlador.listarReservasPorPersona(persona.getCedula())));
+            tablaHistorial.setItems(FXCollections.observableArrayList(principalControlador.listarReservasPorPersona(persona.getCorreo())));
         }
     }
 
@@ -78,6 +81,11 @@ public class PanelClienteControlador implements Observable, Initializable {
         FXMLLoader loader = principalControlador.navegarVentana("/reservas.fxml", "Panel Reservas");
         ReservasControlador reservasControlador = loader.getController();
         reservasControlador.inicializarObservable(this);
+    }
+
+    @FXML
+    void cerrarSesion(ActionEvent event) {
+        sesion.cerrarSesion();
     }
 
     @FXML

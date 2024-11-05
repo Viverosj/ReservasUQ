@@ -7,7 +7,6 @@ import lombok.Setter;
 public class Sesion {
 
     public static Sesion INSTANCIA;
-
     private Persona persona;
 
     public Sesion() {

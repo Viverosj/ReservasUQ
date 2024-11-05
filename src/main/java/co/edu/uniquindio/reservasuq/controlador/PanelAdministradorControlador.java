@@ -6,8 +6,9 @@ import javafx.fxml.Initializable;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class PanelAdministrador implements Observable, Initializable {
+public class PanelAdministradorControlador implements Observable, Initializable {
 
+    private Observable observable;
 
     @Override
     public void notificar() {
@@ -17,5 +18,9 @@ public class PanelAdministrador implements Observable, Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+    }
+
+    public void inicializarObservable(Observable observable) {
+        this.observable = observable;
     }
 }

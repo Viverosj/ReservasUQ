@@ -40,5 +40,6 @@
     <HBox alignment="CENTER_LEFT" spacing="20.0">
         <Button fx:id="reservar" minHeight="40.0" minWidth="130.0" onAction="#reservar" style="-fx-background-color: #00807a; -fx-text-fill: white" text="Reservar" />
       <Button fx:id="cancelarReserva" minHeight="40.0" minWidth="130.0" onAction="#cancelarReserva" style="-fx-background-color: #00807a; -fx-text-fill: white" text="Cancelar Reserva" />
+      <Button minHeight="40.0" minWidth="130.0" onAction="#cerrarSesion" style="-fx-background-color: #00807a; -fx-text-fill: white" text="Cerrar Sesión" />
     </HBox>
 </VBox>

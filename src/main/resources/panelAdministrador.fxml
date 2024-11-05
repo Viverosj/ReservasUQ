@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="622.0" prefWidth="908.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.reservasuq.controlador.PanelAdministrador">
+<VBox prefHeight="622.0" prefWidth="908.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.reservasuq.controlador.PanelAdministradorControlador">
     <Label alignment="CENTER" prefHeight="34.0" prefWidth="746.0" style="-fx-background-color: #d8dbe2" text="Panel del Administrador">
         <font>
             <Font size="20.0" />
