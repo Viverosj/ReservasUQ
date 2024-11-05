@@ -48,11 +48,11 @@
                            <Label text="Costo:" GridPane.rowIndex="2" />
                            <Label text="Horario:" GridPane.rowIndex="3" />
                            <Label text="Tipo Instalación" GridPane.rowIndex="4" />
-                           <TextField GridPane.columnIndex="1" />
-                           <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                           <TextField onAction="#txtIdInstalacion" GridPane.columnIndex="1" />
+                           <TextField onAction="#txtAforo" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                            <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                           <ComboBox prefHeight="26.0" prefWidth="212.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                           <ComboBox prefHeight="26.0" prefWidth="247.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                           <ComboBox onAction="#cbHorario" prefHeight="26.0" prefWidth="212.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                           <ComboBox onAction="#cbTipoInstalacion" prefHeight="26.0" prefWidth="247.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         </children>
                      </GridPane>
                   </children>
@@ -62,11 +62,11 @@
          <VBox prefHeight="519.0" prefWidth="38.0" />
          <TableView prefHeight="439.0" prefWidth="480.0">
            <columns>
-             <TableColumn prefWidth="106.40002286434174" text="Código" />
-             <TableColumn prefWidth="76.79999542236328" text="Aforo" />
-               <TableColumn prefWidth="94.39993286132812" text="Costo" />
-               <TableColumn minWidth="0.0" prefWidth="108.79998779296875" text="Horario" />
-               <TableColumn maxWidth="102.4000305175781" prefWidth="102.4000305175781" text="Instalación" />
+             <TableColumn fx:id="colIdInstalacion" prefWidth="106.40002286434174" text="Código" />
+             <TableColumn fx:id="colAforo" prefWidth="76.79999542236328" text="Aforo" />
+               <TableColumn fx:id="colCosto" prefWidth="94.39993286132812" text="Costo" />
+               <TableColumn fx:id="ColHorario" minWidth="0.0" prefWidth="108.79998779296875" text="Horario" />
+               <TableColumn fx:id="colTipoInstalacion" maxWidth="102.4000305175781" prefWidth="102.4000305175781" text="Instalación" />
            </columns>
          </TableView>
       </children>
@@ -76,7 +76,7 @@
          <HBox prefHeight="100.0" prefWidth="309.0">
             <children>
                <Label prefHeight="44.0" prefWidth="138.0" />
-               <Button mnemonicParsing="false" prefHeight="44.0" prefWidth="118.0" text="Agregar" />
+               <Button mnemonicParsing="false" onAction="#agregarInstalacion" prefHeight="44.0" prefWidth="118.0" text="Agregar" />
             </children>
          </HBox>
       </children>
