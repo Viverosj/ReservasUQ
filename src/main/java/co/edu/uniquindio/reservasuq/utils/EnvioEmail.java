@@ -8,16 +8,6 @@ import org.simplejavamail.mailer.MailerBuilder;
 
 public class EnvioEmail {
 
-    private String destinatario;
-    private String asunto;
-    private String mensaje;
-
-    public EnvioEmail(String destinatario, String asunto, String mensaje) {
-        this.destinatario = destinatario;
-        this.asunto = asunto;
-        this.mensaje = mensaje;
-    }
-
     public static void enviarNotificacion(String destinatario, String asunto, String mensaje) {
 
         Email email = EmailBuilder.startingBlank()

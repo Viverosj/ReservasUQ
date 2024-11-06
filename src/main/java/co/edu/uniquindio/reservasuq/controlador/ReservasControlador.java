@@ -11,7 +11,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
-public class ReservasControlador implements Observable, Initializable {
+public class ReservasControlador implements Initializable {
 
     @FXML private DatePicker txtDiaReserva;
     @FXML private TextField txtCedula;
@@ -38,6 +38,7 @@ public class ReservasControlador implements Observable, Initializable {
             String horaReserva = cbHoraReserva.getValue();
 
             principalControlador.crearReserva(idInstalacion, cedulaPersona, diaReserva, horaReserva);
+            observable.notificar(); //Se debe invocar este método para que actualice la tabla
             limpiarFormularioReserva();
             principalControlador.mostrarAlerta("La reserva ha sido creada y la notificación ha sido enviada.", Alert.AlertType.INFORMATION);
         } catch (Exception e) {
@@ -50,11 +51,6 @@ public class ReservasControlador implements Observable, Initializable {
         txtDiaReserva.setValue(null);
         txtCedula.setText("");
         cbHoraReserva.setValue(null);
-    }
-
-    @Override
-    public void notificar() {
-
     }
 
     @Override
