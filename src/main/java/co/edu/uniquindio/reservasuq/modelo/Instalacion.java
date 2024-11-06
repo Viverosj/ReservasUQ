@@ -1,10 +1,8 @@
 package co.edu.uniquindio.reservasuq.modelo;
 
-import co.edu.uniquindio.reservasuq.modelo.enums.TipoInstalacion;
 import lombok.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,10 +12,10 @@ import java.util.UUID;
 @ToString
 public class Instalacion {
 
+    private String Id;
     private String nombre;
     private int aforo;
     private double costo;
     private List<Horario> horarios;
-    private TipoInstalacion tipoInstalacion;
 
 }

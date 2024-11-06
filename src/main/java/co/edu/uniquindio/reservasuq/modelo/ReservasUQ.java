@@ -1,37 +1,102 @@
 package co.edu.uniquindio.reservasuq.modelo;
-import co.edu.uniquindio.reservasuq.modelo.enums.TipoInstalacion;
 import co.edu.uniquindio.reservasuq.modelo.enums.TipoPersona;
 import co.edu.uniquindio.reservasuq.servicio.ServiciosReservasUQ;
 import co.edu.uniquindio.reservasuq.utils.EnvioEmail;
+import javafx.scene.control.Alert;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Getter
 @Setter
-
+@AllArgsConstructor
 public class ReservasUQ implements ServiciosReservasUQ {
 
     private List<Persona> personas;
     private List<Instalacion> instalaciones;
     private List<Reserva> reservas;
 
+    //Primero registra una persona, busca en la lista si hay persona ya registrada con su numero de cedula,
+    // si no esta registrada la registra, de lo contrario manda un mensaje de que ya esta registrado el usuario y la añade a la lista de personas (TENER EN CUENTA EN EL REGISTROCONTROLADOR)
 
-    public ReservasUQ(){
-        try {
-            this.personas = new ArrayList<>();
-            this.instalaciones = new ArrayList<>();
-            this.reservas = new ArrayList<>();
-        }catch (Exception e){
-            System.out.println(e.getMessage());
+    public Persona registrarPersona(String cedula, String nombre, TipoPersona tipoPersona, String correo, String password) throws Exception {
+        String mensajesValidacion = "";
+
+        if (cedula == null || cedula.isEmpty()) {
+            mensajesValidacion += "Debe ingresar la cédula\n";
         }
 
+        if (nombre == null || nombre.isEmpty()) {
+            mensajesValidacion += "Debe ingresar el nombre\n";
+        }
+
+        if (correo == null || correo.isEmpty()) {
+            mensajesValidacion += "Debe ingresar el correo\n";
+        } else {
+            // Usar el método esCorreoValido para validar el formato del correo
+            if (!esCorreoValido(correo)) {
+                mensajesValidacion += "El correo debe ser válido y tener el formato adecuado\n";
+            }
+        }
+
+        if (tipoPersona == null) {
+            mensajesValidacion += "Debe seleccionar un tipo de persona\n";
+        }
+
+        if (!mensajesValidacion.isEmpty()) {
+            throw new Exception(mensajesValidacion);
+        }
+
+        if (obtenerPersona(cedula) != null) {
+            throw new Exception("Ya existe un usuario con la identificación ingresada");
+        }
+
+        Persona persona = Persona.builder()
+                .tipoPersona(tipoPersona)
+                .cedula(cedula)
+                .nombre(nombre)
+                .correo(correo)
+                .build();
+
+        personas.add(persona);
+        return persona;
     }
 
-    @Override
+    // busca a la persona con la cedula ingresada en la lista de personas
+    public Persona obtenerPersona(String cedula) throws Exception {
+        for (Persona persona : personas) {
+            if (persona.getCedula().equals(cedula)) {
+                return persona;
+            }
+        }
+        return null;
+    }
+
+    //Metodo para Validar el correo Electronico
+    public static boolean esCorreoValido(String correo) {
+        String emailRegex = "^[a-zA-Z0-9_+&-]+(?:\\.[a-zA-Z0-9_+&-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        if (correo==null) {
+            return false;
+        }
+
+        Matcher matcher = pattern.matcher(correo);
+        return matcher.matches();
+    }
+
+    //Este metodo valida que los campos de iniciar sesion
+    // no esten vacios y que correo y contraseña esten correctos
+    // VALIDA LOS DATOS, Entonces va en el login controlador
+
     public Persona login(String correo, String password) throws Exception {
         if (correo == null || correo.isEmpty() || password == null || password.isEmpty()) {
             throw new Exception("Correo y contraseña no pueden estar vacíos.");
@@ -45,211 +110,120 @@ public class ReservasUQ implements ServiciosReservasUQ {
         throw new Exception("Correo o contraseña incorrectos.");
     }
 
-    @Override
-    public Persona registrarPersona(String cedula, String nombre, TipoPersona tipoPersona, String correo, String password) throws Exception {
+    // Metodo de crearReserva: valida que todos los datos esten ingresados y seleccionados
+    // crea la reserva la añade a una lista de reservas
+    // verifica si hay disponibilidad, calcula el costo segun el tipo de persona
+    // tambien verifica si se cumple con el aforo de la instalacion
+    public Reserva crearReserva(String cedulaPersona, Instalacion instalacion, LocalDate diaReserva, String hora, double costo) throws Exception {
+
         String mensajesValidacion = "";
 
-        if(cedula == null || cedula.isEmpty()){
-            mensajesValidacion += "Debe ingresar la cédula\n";
+        if (cedulaPersona == null || cedulaPersona.isEmpty()) {
+            mensajesValidacion += "Debe ingresar la cedula\n";
         }
 
-        if(nombre == null || nombre.isEmpty()){
-            mensajesValidacion += "Debe ingresar el nombre\n";
+        if (instalacion == null) {
+            mensajesValidacion += "Debe seleccionar una instalacion\n";
         }
 
-        if(correo == null || correo.isEmpty()){
-            mensajesValidacion += "Debe ingresar el correo\n";
+        if (diaReserva == null) {
+            mensajesValidacion += "Debe seleccionar el día de la reserva\n";
         }
 
-        if (tipoPersona == null) {
-            mensajesValidacion += "Debe seleccionar un tipo de persona\n";
+        if (hora == null) {
+            mensajesValidacion += "Debe seleccionar la hora de la reserva\n";
         }
 
-        if(!mensajesValidacion.isEmpty()){
+        if (!mensajesValidacion.isEmpty()) {
             throw new Exception(mensajesValidacion);
         }
 
-        if(obtenerPersona(cedula)!=null){
-            throw new Exception("Ya existe un paciente con la identificación ingresada");
+        if (diaReserva.isBefore(LocalDate.now())) {
+            throw new Exception("La fecha de la reserva no puede ser anterior a la fecha actual");
         }
 
-        Persona persona = Persona.builder()
-                .tipoPersona(tipoPersona)
-                .cedula(cedula)
-                .nombre(nombre)
-                .correo(correo)
-                .build();
+        LocalTime horaReserva = LocalTime.parse(hora);
 
-        personas.add(persona);
-        return persona;
-    }
-    @Override
-    public Persona obtenerPersona(String cedula) throws Exception {
-        for (Persona persona: personas) {
-            if(persona.getCedula().equals(cedula)){
-                return persona;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public ArrayList<Persona> listarPersonas() throws Exception {
-        return new ArrayList<Persona>(personas);
-    }
-
-    @Override
-    public void crearInstalacion(String nombre, int aforo, double costo, List<Horario> horarios, TipoInstalacion tipoInstalacion) throws Exception {
-
-        if (nombre == null || nombre.isEmpty()) {
-            throw new Exception("El nombre de la instalación no puede estar vacío.");
-        }
-        if (aforo <= 0) {
-            throw new Exception("El aforo debe ser mayor a cero.");
-        }
-        if (costo < 0) {
-            throw new Exception("El costo no puede ser negativo.");
-        }
-        if (horarios == null || horarios.isEmpty()) {
-            throw new Exception("Debe especificar al menos un horario para la instalación.");
-        }
-        if (tipoInstalacion == null) {
-            throw new Exception("Debe especificar el tipo de instalación.");
+        if (!hayDisponibilidad(diaReserva, horaReserva, instalacion)) {
+            throw new Exception("Ya existe una reserva agendada para el día y hora seleccionados");
         }
 
-        for (Instalacion instalacion : instalaciones) {
-            if (instalacion.getNombre().equalsIgnoreCase(nombre)) {
-                throw new Exception("Ya existe una instalación con ese nombre.");
-            }
+        // Verificar si la instalación ha alcanzado su capacidad máxima para la fecha y hora especificadas
+        int reservasExistentes = contarReservasParaInstalacion(instalacion, diaReserva, horaReserva);
+        if (reservasExistentes >= instalacion.getAforo()) {
+            throw new Exception("La instalación ha alcanzado su capacidad máxima para el día y hora seleccionados");
         }
 
-        Instalacion nuevaInstalacion = Instalacion.builder()
-                .nombre(nombre)
-                .aforo(aforo)
-                .costo(costo)
-                .horarios(horarios)
-                .tipoInstalacion(tipoInstalacion)
-                .build();
+        Persona persona = obtenerPersona(cedulaPersona);
 
-        instalaciones.add(nuevaInstalacion);
-    }
+        double costoReserva = persona.getTipoPersona() == TipoPersona.EXTERNO ? instalacion.getCosto() : 0.0;
 
-    @Override
-    public Reserva obtenerReservasPersona(String cedulaPersona) throws Exception {
-        for(int i = 0; i < reservas.size(); i++){
-            if(reservas.get(i).getCedulaPersona().equals(cedulaPersona)){
-                return reservas.get(i);
-            }
-        }
-        return null;
-    }
 
-    @Override
-    public Reserva crearReserva(String idInstalacion, String cedulapersona, LocalDate diaReserva, String horaReserva) throws Exception {
-
-        if (idInstalacion == null || idInstalacion.isEmpty()) {
-            throw new Exception("El ID de la instalación no puede estar vacío.");
-        }
-        if (cedulapersona == null || cedulapersona.isEmpty()) {
-            throw new Exception("La cédula de la persona no puede estar vacía.");
-        }
-        if (diaReserva == null || diaReserva.isBefore(LocalDate.now().plusDays(2))) {
-            throw new Exception("La reserva debe hacerse con al menos 2 días de anticipación.");
-        }
-        if (horaReserva == null || horaReserva.isEmpty()) {
-            throw new Exception("La hora de inicio de la reserva no puede estar vacía.");
-        }
-
-        Instalacion instalacion = buscarInstalacionPorId(idInstalacion);
-        if (instalacion == null) {
-            throw new Exception("La instalación especificada no existe.");
-        }
-
-        Persona persona = obtenerPersona(cedulapersona);
-        if (persona == null) {
-            throw new Exception("La persona especificada no existe.");
-        }
-
-        if (!verificarDisponibilidad(instalacion, diaReserva, horaReserva)) {
-            throw new Exception("La instalación no está disponible en el horario solicitado.");
-        }
-
-        Reserva nuevaReserva = Reserva.builder()
-                .idInstalacion(idInstalacion)
-                .cedulaPersona(cedulapersona)
+        Reserva reserva = Reserva.builder()
+                .persona(persona)
+                .id(String.valueOf(UUID.randomUUID()))
                 .diaReserva(diaReserva)
                 .horaReserva(horaReserva)
+                .instalacion(instalacion)
+                .costo(costoReserva)
                 .build();
 
-        reservas.add(nuevaReserva);
+        reservas.add(reserva);
 
-        return nuevaReserva;
+        String mensaje = "Reserva confirmada para" + persona.getNombre()
+                + "\nServicio: " + instalacion.getNombre()
+                + "\nDía: " + reserva.getDiaReserva()
+                + "\nHora: " + reserva.getHoraReserva()
+                + "\nCosto Total: $" + costo;
+
+        EnvioEmail.enviarNotificacion(persona.getCorreo(), "Confirmacion de reserva", mensaje);
+        return reserva;
     }
 
-    @Override
-    public Instalacion buscarInstalacionPorId(String idInstalacion) throws Exception{
-        for (Instalacion instalacion : instalaciones) {
-            if (instalacion.getNombre().equalsIgnoreCase(idInstalacion)) {
-                return instalacion;
+    //Método para contar las reservas de una instalación en una fecha y hora específicas
+    public int contarReservasParaInstalacion(Instalacion instalacion, LocalDate diaReserva, LocalTime horaReserva) {
+        int contador = 0;
+        for (Reserva reserva : reservas) {
+            if (reserva.getInstalacion().equals(instalacion)
+                    && reserva.getDiaReserva().equals(diaReserva)
+                    && reserva.getHoraReserva().equals(horaReserva)) {
+                contador++;
             }
         }
-        return null;
+        return contador;
     }
 
-    @Override
-    public boolean verificarDisponibilidad(Instalacion instalacion, LocalDate diaReserva, String horaReserva) {
+    //Metodo para tener en cuenta si hay disponibilidad
+    public boolean hayDisponibilidad(LocalDate diaReserva, LocalTime horaReserva, Instalacion instalacion) {
         for (Reserva reserva : reservas) {
-            if (reserva.getIdInstalacion().equals(instalacion.getNombre()) &&
-                    reserva.getDiaReserva().equals(diaReserva) &&
-                    reserva.getHoraReserva().equals(horaReserva)) {
+            if (reserva.getDiaReserva().equals(diaReserva) && reserva.getHoraReserva().equals(horaReserva) && reserva.getInstalacion() == instalacion) {
                 return false;
             }
         }
         return true;
     }
 
-    @Override
-    public List<Reserva> listarTodasReservas() {
-        return reservas;
-    }
+    //Metodo para listar Todas las reservas realizadas por el Usuario
+    // tener en cuenta el metodo de agendarCita de clinica
 
-    @Override
-    public List<Reserva> listarReservasPorPersona(String cedulaPersona) {
+    public List<Reserva> listarReservasPorPersona(String cedulaPersona) throws Exception {
+        if (cedulaPersona == null || cedulaPersona.isEmpty()) {
+            throw new Exception("Debe ingresar una cédula válida");
+        }
         List<Reserva> reservasPersona = new ArrayList<>();
+        // Filtrar las reservas que pertenecen a la persona con la cédula
         for (Reserva reserva : reservas) {
-            if (reserva.getCedulaPersona().equals(reserva.getCedulaPersona())) {
+            if (reserva.getPersona().getCedula().equals(cedulaPersona)) {
                 reservasPersona.add(reserva);
             }
+        }
+        if (reservasPersona.isEmpty()) {
+            throw new Exception("No se encontraron reservas para la persona con cédula: " + cedulaPersona);
         }
         return reservasPersona;
     }
 
-    @Override
-    public List<Reserva> obtenerHistorialReservas(String cedulaPersona) {
-        List<Reserva> reservasPersona = new ArrayList<>();
-
-        for (Reserva reserva : reservas) {
-            if (reserva.getCedulaPersona().equals(reserva.getCedulaPersona())) {
-                reservasPersona.add(reserva);
-            }
-        }
-
-        reservasPersona.sort(Comparator.comparing(Reserva::getDiaReserva).reversed()); // Ordena la lista de reservas por fecha en orden descendente
-
-        return reservasPersona;
-    }
-
-    @Override
-    public boolean hayDisponibilidad(LocalDate diaReserva, String horaReserva, String idInstalacion) {
-        for (Reserva reserva: reservas) {
-            if(reserva.getDiaReserva().equals(diaReserva) && reserva.getHoraReserva().equals(horaReserva) && reserva.getIdInstalacion() .equals(idInstalacion)){
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
+    //Metodo de cancelar reserva
     public void cancelarReserva(String reservaId) {
         for (Reserva reserva: reservas) {
             if(reserva.getId().equals(reservaId)){
@@ -259,245 +233,145 @@ public class ReservasUQ implements ServiciosReservasUQ {
         }
     }
 
-    @Override
-    public List<Reserva> listarReservasPorInstalacion(String idInstalacion) {
-        List<Reserva> reservasInstalacion = new ArrayList<>();
+    //Metodo de crear Instalacion (ADMINISTRADOR)
 
-        for (Reserva reserva : reservas) {
-            if (reserva.getIdInstalacion().equals(idInstalacion)) {
-                reservasInstalacion.add(reserva);
-            }
+    public Instalacion crearInstalacion(String nombre, int aforo, double costoBase, List<Horario> horarios) throws Exception {
+
+        String mensajesValidacion = "";
+
+        // Instalaciones predeterminadas
+        if (instalaciones.isEmpty()) {
+            // Ejemplo de instalaciones predeterminadas
+            Instalacion instalacion1 = Instalacion.builder()
+                    .Id(String.valueOf(UUID.randomUUID()))
+                    .nombre("Gimnasio principal")
+                    .aforo(30)
+                    .costo(5.000)
+                    .horarios(Arrays.asList(new Horario(LocalTime.of(6, 0), LocalTime.of(10, 0))))
+                    .build();
+
+            Instalacion instalacion2 = Instalacion.builder()
+                    .Id(String.valueOf(UUID.randomUUID()))
+                    .nombre("Sala de yoga")
+                    .aforo(20)
+                    .costo(4.000)
+                    .horarios(Arrays.asList(new Horario(LocalTime.of(8, 0), LocalTime.of(12, 0))))
+                    .build();
+
+            Instalacion instalacion3 = Instalacion.builder()
+                    .Id(String.valueOf(UUID.randomUUID()))
+                    .nombre("Piscina")
+                    .aforo(15)
+                    .costo(10.000)
+                    .horarios(Arrays.asList(new Horario(LocalTime.of(9, 0), LocalTime.of(18, 0))))
+                    .build();
+
+            // Agregar las instalaciones predeterminadas a la lista
+            instalaciones.add(instalacion1);
+            instalaciones.add(instalacion2);
+            instalaciones.add(instalacion3);
         }
 
-        return reservasInstalacion;
-    }
-    @Override
-    public void enviarNotificacionReserva(String email, Reserva reserva) {
-
-        String asunto = "Confirmación de Reserva para " + reserva.getIdInstalacion();
-        String mensaje = String.format("""
-                        Estimado usuario,
-
-                        Su reserva para la instalación %s ha sido confirmada.
-                        Detalles de la reserva:
-                         - Fecha: %s
-                         - Hora de inicio: %s
-                         - Hora de fin: %s
-
-                        Gracias por utilizar nuestro sistema de reservas.
-                        Universidad del Quindío""",
-                reserva.getIdInstalacion(),
-                reserva.getDiaReserva(),
-                reserva.getHoraReserva());
-
-        EnvioEmail.enviarNotificacion(email, asunto,mensaje);
-    }
-
-    @Override
-    public void enviarRecordatorioReserva(String email, Reserva reserva) {
-
-        String asunto = "Recordatorio de Reserva para " + reserva.getIdInstalacion();
-        String mensaje = String.format("""
-                        Estimado usuario,
-
-                        Le recordamos que tiene una reserva programada para la instalación %s.
-                        Detalles de la reserva:
-                         - Fecha: %s
-                         - Hora de inicio: %s
-                         - Hora de fin: %s
-
-                        Por favor, asegúrese de llegar a tiempo para evitar inconvenientes.
-                        Universidad del Quindío""",
-                reserva.getIdInstalacion(),
-                reserva.getDiaReserva(),
-                reserva.getHoraReserva());
-
-        EnvioEmail.enviarNotificacion(email, asunto, mensaje);
-    }
-
-    @Override
-    public double costoReservaInstalacion(String cedulaPersona, String idInstalacion, int horasReserva) throws Exception {
-
-        Persona usuario = obtenerPersona(cedulaPersona);
-        if (usuario == null) {
-            throw new Exception("Usuario no encontrado.");
+        if (nombre == null || nombre.isEmpty()) {
+            mensajesValidacion += "El nombre de la instalación no puede estar vacío.\n";
         }
 
-        Instalacion instalacion = buscarInstalacionPorId(idInstalacion);
-        if (instalacion == null) {
-            throw new Exception("Instalación no encontrada.");
+        if (aforo <= 0) {
+            mensajesValidacion += "El aforo debe ser mayor a 0.\n";
         }
 
-        double costoBasePorHora;
-
-        // Asignar el costo base por hora según la instalación (solo aplica para externos)
-        switch (instalacion.getTipoInstalacion()) {
-            case PISCINA:
-                costoBasePorHora = 15000;
-                break;
-            case GIMNASIO:
-                costoBasePorHora = 10000;
-                break;
-            case CANCHA_FUTBOL:
-                costoBasePorHora = 40000;
-                break;
-            case CANCHA_BALONCESTO:
-                costoBasePorHora = 30000;
-                break;
-            case AULAS_ESTUDIO:
-                costoBasePorHora = 25000;
-                break;
-            case SALONES_EVENTOS:
-                costoBasePorHora = 100000;
-                break;
-            default:
-                throw new Exception("Tipo de instalación desconocido.");
-        }
-
-        double costoTotal = switch (usuario.getTipoPersona()) {
-            case EXTERNO ->
-                // Usuarios externos pagan el costo completo
-                    costoBasePorHora * horasReserva;
-            case ADMINISTRATIVO, ESTUDIANTE, PROFESOR -> 0;
-            default -> throw new Exception("Tipo de usuario desconocido.");
-        };
-
-        return costoTotal;
-    }
-
-    @Override
-    public void actualizarInstalacion(String nombre, Integer nuevoAforo, Double nuevoCosto, List<Horario> nuevosHorarios) throws Exception {
-        Instalacion instalacion = buscarInstalacionPorNombre(nombre);
-        if (instalacion == null) {
-            throw new Exception("La instalación no existe.");
-        }
-
-        if (nuevoAforo != null && nuevoAforo > 0) {
-            instalacion.setAforo(nuevoAforo);
-        }
-        if (nuevoCosto != null && nuevoCosto >= 0) {
-            instalacion.setCosto(nuevoCosto);
-        }
-        if (nuevosHorarios != null && !nuevosHorarios.isEmpty()) {
-            instalacion.setHorarios(nuevosHorarios);
-        }
-    }
-
-    @Override
-    public void eliminarInstalacion(String nombre) throws Exception {
-        Instalacion instalacion = buscarInstalacionPorNombre(nombre);
-        if (instalacion == null) {
-            throw new Exception("La instalación no existe.");
-        }
-
-        instalaciones.remove(instalacion);
-    }
-
-    @Override
-    public void asignarHorariosInstalacion(String nombre, List<Horario> horarios) throws Exception {
-        Instalacion instalacion = buscarInstalacionPorNombre(nombre);
-        if (instalacion == null) {
-            throw new Exception("La instalación no existe.");
+        if (costoBase < 0) {
+            mensajesValidacion += "El costo base no puede ser negativo.\n";
         }
 
         if (horarios == null || horarios.isEmpty()) {
-            throw new Exception("Debe proporcionar una lista de horarios válida.");
+            mensajesValidacion += "Debe proporcionar al menos un horario para la instalación.\n";
         }
 
-        instalacion.setHorarios(horarios);
+        // Validar que los horarios sean válidos (hora fin debe ser posterior a hora inicio)
+        for (Horario horario : horarios) {
+            if (horario.getHoraFin().isBefore(horario.getHoraInicio())) {
+                mensajesValidacion += "La hora de fin debe ser posterior a la hora de inicio para el horario: " + horario + "\n";
+            }
+        }
+
+        if (!mensajesValidacion.isEmpty()) {
+            throw new Exception(mensajesValidacion);
+        }
+
+        Instalacion instalacion = Instalacion.builder()
+                .Id(String.valueOf(UUID.randomUUID()))
+                .nombre(nombre)
+                .aforo(aforo)
+                .costo(costoBase)
+                .horarios(horarios)
+                .build();
+
+        instalaciones.add(instalacion);
+
+        return instalacion;
     }
 
-    @Override
-    public void establecerCapacidadInstalacion(String nombre, int nuevoAforo) throws Exception {
-        Instalacion instalacion = buscarInstalacionPorNombre(nombre);
-        if (instalacion == null) {
-            throw new Exception("La instalación no existe.");
+    // Método para listar todas las instalaciones creadas (ADMINISTRADOR)
+    public List<Instalacion> listarInstalaciones() throws Exception {
+        if (instalaciones.isEmpty()) {
+            throw new Exception("No hay instalaciones creadas.");
         }
-
-        if (nuevoAforo <= 0) {
-            throw new Exception("La capacidad de aforo debe ser mayor a cero.");
-        }
-
-        instalacion.setAforo(nuevoAforo);
+        return instalaciones;  // Devuelve la lista de instalaciones
     }
 
-    public Instalacion buscarInstalacionPorNombre(String nombre) {
+    //Metodo de eliminar instalacion (ADMINISTRADOR)
+    public void eliminarInstalacion(String instalacionId) {
+        for (Instalacion instalacion: instalaciones) {
+            if(instalacion.getId().equals(instalacionId)){
+                instalaciones.remove(instalacion);
+                break;
+            }
+        }
+    }
+
+    // Método para actualizar una instalación por su ID (ADMINISTRADOR)
+    public void actualizarInstalacion(String idInstalacion, String nuevoNombre, int nuevoAforo, double nuevoCosto, List<Horario> nuevosHorarios) throws Exception {
+
+        Instalacion instalacionAActualizar = null;
+
         for (Instalacion instalacion : instalaciones) {
-            if (instalacion.getNombre().equalsIgnoreCase(nombre)) {
-                return instalacion;
+            if (instalacion.getId().equals(idInstalacion)) {
+                instalacionAActualizar = instalacion;
+                break;
             }
         }
-        return null;
-    }
 
-    @Override
-    public List<Instalacion> listarInstalaciones() {
-        return instalaciones;
-    }
-
-    @Override
-    public void agregarUsuario(String cedula, String nombre, String correo, TipoPersona tipo) throws Exception {
-
-        if (obtenerPersona(cedula) != null) {
-            throw new Exception("Ya existe un usuario con esa cédula.");
+        if (instalacionAActualizar == null) {
+            throw new Exception("Instalación no encontrada con ID: " + idInstalacion);
         }
 
-        Persona nuevoUsuario = new Persona();
-        nuevoUsuario.setCedula(cedula);
-        nuevoUsuario.setNombre(nombre);
-        nuevoUsuario.setCorreo(correo);
-        nuevoUsuario.setTipoPersona(tipo);
-
-        personas.add(nuevoUsuario);
-
-    }
-
-    @Override
-    public void actualizarUsuario(String cedula, String nombre, String correo, TipoPersona tipo) throws Exception {
-        Persona usuario = obtenerPersona(cedula);
-        if (usuario == null) {
-            throw new Exception("usuario no encontrado.");
+        if (nuevoNombre != null && !nuevoNombre.isEmpty()) {
+            instalacionAActualizar.setNombre(nuevoNombre);
         }
-        usuario.setNombre(nombre);
-        usuario.setCorreo(correo);
-        usuario.setTipoPersona(tipo);
-
-    }
-
-    @Override
-    public void eliminarUsuario(String cedula) throws Exception {
-
-        Persona usuario = obtenerPersona(cedula);
-        if (usuario == null) {
-            throw new Exception("Usuario no encontrado.");
+        if (nuevoAforo > 0) {
+            instalacionAActualizar.setAforo(nuevoAforo);
+        } else {
+            throw new Exception("El aforo debe ser mayor que 0");
+        }
+        if (nuevoCosto >= 0) {
+            instalacionAActualizar.setCosto(nuevoCosto);
+        } else {
+            throw new Exception("El costo debe ser mayor o igual a 0");
+        }
+        if (nuevosHorarios != null && !nuevosHorarios.isEmpty()) {
+            instalacionAActualizar.setHorarios(nuevosHorarios);
+        } else {
+            throw new Exception("Los horarios no pueden estar vacíos");
         }
 
-        personas.remove(usuario);
-    }
-
-    @Override
-    public List<String> generarHorarios() {
-        List<String> horarios = new ArrayList<>();
-        for (int i = 8; i < 18; i++) {
-            if(i < 10){
-                horarios.add("0" + i + ":00");
-                horarios.add("0" + i + ":30");
-            }else{
-                horarios.add(i + ":00");
-                horarios.add(i + ":30");
-            }
-        }
-        return horarios;
-    }
-
-    @Override
-    public Persona validacionDatosIngreso(String correo, String password) throws Exception {
-        for(Persona persona : personas){
-            if(persona.getCorreo().equals(correo) && persona.getPassword().equals(password)){
-                return persona;
-            }
-        }
-        throw new Exception("correo y contraseña no validos.");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Instalación Actualizada");
+        alert.setHeaderText("La instalación se ha actualizado correctamente.");
+        alert.setContentText("Instalación: " + instalacionAActualizar.getNombre() +
+                "\nNuevo Aforo: " + instalacionAActualizar.getAforo() +
+                "\nNuevo Costo: $" + instalacionAActualizar.getCosto());
+        alert.showAndWait();
     }
 
 }

@@ -3,7 +3,6 @@ package co.edu.uniquindio.reservasuq.controlador;
 import co.edu.uniquindio.reservasuq.controlador.observador.Observable;
 import co.edu.uniquindio.reservasuq.modelo.Horario;
 import co.edu.uniquindio.reservasuq.modelo.Instalacion;
-import co.edu.uniquindio.reservasuq.modelo.enums.TipoInstalacion;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
