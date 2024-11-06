@@ -397,5 +397,15 @@ public class ReservasUQ implements ServiciosReservasUQ {
     }
 
     //metodo de generar horarios
-    
+    public List<String> generarHorarios() {
+        List<String> horarios = new ArrayList<>();
+        for (int i = 8; i < 18; i++) {
+            if(i < 10){
+                horarios.add("0" + i + ":00");
+            }else{
+                horarios.add(i + ":00");
+            }
+        }
+        return horarios;
+    }
 }
