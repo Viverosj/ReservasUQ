@@ -1,4 +1,4 @@
 package co.edu.uniquindio.reservasuq.controlador.observador;
 public interface Observable {
-    void notificar();
+    void notificar() throws Exception;
 }

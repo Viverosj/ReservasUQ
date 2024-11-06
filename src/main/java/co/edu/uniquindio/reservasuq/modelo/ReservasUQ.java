@@ -5,6 +5,7 @@ import co.edu.uniquindio.reservasuq.utils.EnvioEmail;
 import javafx.scene.control.Alert;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -18,6 +19,7 @@ import java.util.regex.Pattern;
 
 @Getter
 @Setter
+@NoArgsConstructor
 
 public class ReservasUQ implements ServiciosReservasUQ {
 
@@ -393,5 +395,4 @@ public class ReservasUQ implements ServiciosReservasUQ {
                 "\nNuevo Costo: $" + instalacionAActualizar.getCosto());
         alert.showAndWait();
     }
-
 }

@@ -60,7 +60,7 @@ public class PanelClienteControlador implements Observable, Initializable {
         Persona persona = sesion.getPersona();
         inicializarValores(persona);
 
-        colIdInstalacion.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIdInstalacion()));
+        colIdInstalacion.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getInstalacion()));
         colDiaReserva.setCellValueFactory(cellData -> new SimpleStringProperty());
         colHoraReserva.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHoraReserva()));
 
@@ -68,7 +68,7 @@ public class PanelClienteControlador implements Observable, Initializable {
 
     }
 
-    private void setConsultarHistorial() {
+    private void setConsultarHistorial() throws Exception {
         if (persona != null) {
             tablaHistorial.setItems(FXCollections.observableArrayList(principalControlador.listarReservasPorPersona(persona.getCorreo())));
         }
@@ -92,7 +92,7 @@ public class PanelClienteControlador implements Observable, Initializable {
     }
 
     @Override
-    public void notificar() {
+    public void notificar() throws Exception {
         setConsultarHistorial();
     }
 

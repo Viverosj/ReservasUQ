@@ -99,4 +99,14 @@ public class PrincipalControlador implements ServiciosReservasUQ {
 
     }
 
+    public FXMLLoader navegarVentana(String s, String panelReservas) {
+        return null;
+    }
+
+    public Reserva obtenerReservasPersona(String cedula) {
+        return null;
+    }
+
+    public void mostrarAlerta(String message, Alert.AlertType alertType) {
+    }
 }
