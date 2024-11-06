@@ -18,16 +18,24 @@ import java.util.regex.Pattern;
 
 @Getter
 @Setter
-@AllArgsConstructor
+
 public class ReservasUQ implements ServiciosReservasUQ {
 
     private List<Persona> personas;
     private List<Instalacion> instalaciones;
     private List<Reserva> reservas;
 
+    public ReservasUQ(List<Persona> personas, List<Instalacion> instalaciones, List<Reserva> reservas) {
+        this.personas = personas;
+        this.instalaciones = instalaciones;
+        this.reservas = reservas;
+    }
+
+
     //Primero registra una persona, busca en la lista si hay persona ya registrada con su numero de cedula,
     // si no esta registrada la registra, de lo contrario manda un mensaje de que ya esta registrado el usuario y la añade a la lista de personas (TENER EN CUENTA EN EL REGISTROCONTROLADOR)
 
+    @Override
     public Persona registrarPersona(String cedula, String nombre, TipoPersona tipoPersona, String correo, String password) throws Exception {
         String mensajesValidacion = "";
 
@@ -72,6 +80,7 @@ public class ReservasUQ implements ServiciosReservasUQ {
     }
 
     // busca a la persona con la cedula ingresada en la lista de personas
+    @Override
     public Persona obtenerPersona(String cedula) throws Exception {
         for (Persona persona : personas) {
             if (persona.getCedula().equals(cedula)) {
@@ -82,7 +91,8 @@ public class ReservasUQ implements ServiciosReservasUQ {
     }
 
     //Metodo para Validar el correo Electronico
-    public static boolean esCorreoValido(String correo) {
+    @Override
+    public boolean esCorreoValido(String correo) {
         String emailRegex = "^[a-zA-Z0-9_+&-]+(?:\\.[a-zA-Z0-9_+&-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         Pattern pattern = Pattern.compile(emailRegex);
         if (correo==null) {
@@ -97,6 +107,7 @@ public class ReservasUQ implements ServiciosReservasUQ {
     // no esten vacios y que correo y contraseña esten correctos
     // VALIDA LOS DATOS, Entonces va en el login controlador
 
+    @Override
     public Persona login(String correo, String password) throws Exception {
         if (correo == null || correo.isEmpty() || password == null || password.isEmpty()) {
             throw new Exception("Correo y contraseña no pueden estar vacíos.");
@@ -114,6 +125,7 @@ public class ReservasUQ implements ServiciosReservasUQ {
     // crea la reserva la añade a una lista de reservas
     // verifica si hay disponibilidad, calcula el costo segun el tipo de persona
     // tambien verifica si se cumple con el aforo de la instalacion
+    @Override
     public Reserva crearReserva(String cedulaPersona, Instalacion instalacion, LocalDate diaReserva, String hora, double costo) throws Exception {
 
         String mensajesValidacion = "";
@@ -181,6 +193,7 @@ public class ReservasUQ implements ServiciosReservasUQ {
     }
 
     //Método para contar las reservas de una instalación en una fecha y hora específicas
+    @Override
     public int contarReservasParaInstalacion(Instalacion instalacion, LocalDate diaReserva, LocalTime horaReserva) {
         int contador = 0;
         for (Reserva reserva : reservas) {
@@ -194,6 +207,7 @@ public class ReservasUQ implements ServiciosReservasUQ {
     }
 
     //Metodo para tener en cuenta si hay disponibilidad
+    @Override
     public boolean hayDisponibilidad(LocalDate diaReserva, LocalTime horaReserva, Instalacion instalacion) {
         for (Reserva reserva : reservas) {
             if (reserva.getDiaReserva().equals(diaReserva) && reserva.getHoraReserva().equals(horaReserva) && reserva.getInstalacion() == instalacion) {
@@ -206,6 +220,7 @@ public class ReservasUQ implements ServiciosReservasUQ {
     //Metodo para listar Todas las reservas realizadas por el Usuario
     // tener en cuenta el metodo de agendarCita de clinica
 
+    @Override
     public List<Reserva> listarReservasPorPersona(String cedulaPersona) throws Exception {
         if (cedulaPersona == null || cedulaPersona.isEmpty()) {
             throw new Exception("Debe ingresar una cédula válida");
@@ -224,6 +239,7 @@ public class ReservasUQ implements ServiciosReservasUQ {
     }
 
     //Metodo de cancelar reserva
+    @Override
     public void cancelarReserva(String reservaId) {
         for (Reserva reserva: reservas) {
             if(reserva.getId().equals(reservaId)){
@@ -235,13 +251,14 @@ public class ReservasUQ implements ServiciosReservasUQ {
 
     //Metodo de crear Instalacion (ADMINISTRADOR)
 
+    @Override
     public Instalacion crearInstalacion(String nombre, int aforo, double costoBase, List<Horario> horarios) throws Exception {
 
         String mensajesValidacion = "";
 
         // Instalaciones predeterminadas
         if (instalaciones.isEmpty()) {
-            // Ejemplo de instalaciones predeterminadas
+            // Instalaciones predeterminadas
             Instalacion instalacion1 = Instalacion.builder()
                     .Id(String.valueOf(UUID.randomUUID()))
                     .nombre("Gimnasio principal")
@@ -313,6 +330,7 @@ public class ReservasUQ implements ServiciosReservasUQ {
     }
 
     // Método para listar todas las instalaciones creadas (ADMINISTRADOR)
+    @Override
     public List<Instalacion> listarInstalaciones() throws Exception {
         if (instalaciones.isEmpty()) {
             throw new Exception("No hay instalaciones creadas.");
@@ -321,6 +339,7 @@ public class ReservasUQ implements ServiciosReservasUQ {
     }
 
     //Metodo de eliminar instalacion (ADMINISTRADOR)
+    @Override
     public void eliminarInstalacion(String instalacionId) {
         for (Instalacion instalacion: instalaciones) {
             if(instalacion.getId().equals(instalacionId)){
@@ -331,6 +350,7 @@ public class ReservasUQ implements ServiciosReservasUQ {
     }
 
     // Método para actualizar una instalación por su ID (ADMINISTRADOR)
+    @Override
     public void actualizarInstalacion(String idInstalacion, String nuevoNombre, int nuevoAforo, double nuevoCosto, List<Horario> nuevosHorarios) throws Exception {
 
         Instalacion instalacionAActualizar = null;

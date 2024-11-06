@@ -15,9 +15,7 @@ public interface ServiciosReservasUQ {
     Persona registrarPersona(String cedula, String nombre, TipoPersona tipoPersona, String correo, String password) throws Exception;
     Persona obtenerPersona(String cedula) throws Exception;
 
-    static boolean esCorreoValido(String correo) {
-        return false;
-    }
+    boolean esCorreoValido(String correo);
     Persona login(String correo, String password) throws Exception;
     Reserva crearReserva(String cedulaPersona, Instalacion instalacion, LocalDate diaReserva, String hora, double costo) throws Exception;
     int contarReservasParaInstalacion(Instalacion instalacion, LocalDate diaReserva, LocalTime horaReserva);
