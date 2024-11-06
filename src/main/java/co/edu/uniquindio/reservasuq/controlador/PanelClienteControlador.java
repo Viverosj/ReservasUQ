@@ -23,8 +23,7 @@ public class PanelClienteControlador implements Observable, Initializable {
     @FXML private Button reservar;
     @FXML private Button cancelarReserva;
     @FXML private TableColumn<Reserva, String> colDiaReserva;
-    @FXML private TableColumn<Reserva, String> colHoraFin;
-    @FXML private TableColumn<Reserva, String> colHoraInicio;
+    @FXML private TableColumn<Reserva, String> colHoraReserva;
     @FXML private TableColumn<Reserva, String> colIdInstalacion;
     @FXML private Label mensajeBienvenida;
     @FXML private TableView<Reserva> tablaHistorial;
@@ -63,8 +62,7 @@ public class PanelClienteControlador implements Observable, Initializable {
 
         colIdInstalacion.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIdInstalacion()));
         colDiaReserva.setCellValueFactory(cellData -> new SimpleStringProperty());
-        colHoraInicio.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHoraInicio()));
-        colHoraFin.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHoraInicio()));
+        colHoraReserva.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHoraReserva()));
 
         tablaHistorial.setItems(FXCollections.observableArrayList());
 

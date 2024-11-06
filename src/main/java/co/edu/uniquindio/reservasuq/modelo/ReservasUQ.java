@@ -366,20 +366,6 @@ public class ReservasUQ implements ServiciosReservasUQ {
     }
 
     @Override
-    public void agregarInstalacion(String nombre, int aforo, double costo, List<Horario> horarios, TipoInstalacion tipoInstalacion) throws Exception {
-        if (buscarInstalacionPorNombre(nombre) != null) {
-            throw new Exception("Ya existe una instalación con el nombre proporcionado.");
-        }
-
-        if (nombre == null || nombre.isEmpty() || aforo <= 0 || costo < 0 || tipoInstalacion == null || horarios == null || horarios.isEmpty()) {
-            throw new Exception("Datos inválidos para la creación de la instalación.");
-        }
-
-        Instalacion nuevaInstalacion = new Instalacion(nombre, aforo, costo, horarios, tipoInstalacion);
-        instalaciones.add(nuevaInstalacion);
-    }
-
-    @Override
     public void actualizarInstalacion(String nombre, Integer nuevoAforo, Double nuevoCosto, List<Horario> nuevosHorarios) throws Exception {
         Instalacion instalacion = buscarInstalacionPorNombre(nombre);
         if (instalacion == null) {
@@ -502,6 +488,16 @@ public class ReservasUQ implements ServiciosReservasUQ {
             }
         }
         return horarios;
+    }
+
+    @Override
+    public Persona validacionDatosIngreso(String correo, String password) throws Exception {
+        for(Persona persona : personas){
+            if(persona.getCorreo().equals(correo) && persona.getPassword().equals(password)){
+                return persona;
+            }
+        }
+        throw new Exception("correo y contraseña no validos.");
     }
 
 }

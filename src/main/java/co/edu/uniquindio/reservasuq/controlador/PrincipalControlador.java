@@ -96,9 +96,10 @@ public class PrincipalControlador implements ServiciosReservasUQ {
     }
 
     @Override
-    public List<Horario> obtenerHorariosDisponibles(String idInstalacion, LocalDate diaReserva) throws Exception {
-        return reservasUQ.obtenerHorariosDisponibles(idInstalacion, diaReserva);
+    public boolean hayDisponibilidad(LocalDate diaReserva, String horaReserva, String idInstalacion) {
+        return  reservasUQ.hayDisponibilidad(diaReserva, horaReserva, idInstalacion);
     }
+
 
     @Override
     public void cancelarReserva(String idReserva) throws Exception {
@@ -146,11 +147,6 @@ public class PrincipalControlador implements ServiciosReservasUQ {
     }
 
     @Override
-    public void agregarInstalacion(String nombre, int aforo, double costo, List<Horario> horarios, TipoInstalacion tipoInstalacion) throws Exception {
-        reservasUQ.agregarInstalacion(nombre, aforo, costo, horarios, tipoInstalacion);
-    }
-
-    @Override
     public void actualizarInstalacion(String nombre, Integer nuevoAforo, Double nuevoCosto, List<Horario> nuevosHorarios) throws Exception {
         reservasUQ.actualizarInstalacion(nombre, nuevoAforo, nuevoCosto, nuevosHorarios);
     }
@@ -173,6 +169,11 @@ public class PrincipalControlador implements ServiciosReservasUQ {
     @Override
     public List<String> generarHorarios() {
         return reservasUQ.generarHorarios();
+    }
+
+    @Override
+    public Persona validacionDatosIngreso(String correo, String password) throws Exception {
+        return reservasUQ.validacionDatosIngreso(correo, password);
     }
 
 

@@ -28,7 +28,7 @@ public class ReservasControlador implements Observable, Initializable {
         this.observable = observable;
     }
 
-
+    //va al controlador de panel cliente
     @FXML
     void registrarReserva(ActionEvent event) {
         try {

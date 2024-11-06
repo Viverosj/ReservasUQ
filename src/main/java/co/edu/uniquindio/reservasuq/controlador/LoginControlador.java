@@ -36,11 +36,14 @@ public class LoginControlador implements Observable, Initializable {
         this.observable = observable;
     }
 
-    public void login(ActionEvent actionEvent) {
+    //aquí debe ir el método de validación de datos ingreso
+
+    public void login(ActionEvent actionEvent) throws Exception {
+        Persona persona = principalControlador.validacionDatosIngreso(txtCorreo.getText(), txtPassword.getText());
         try {
             String email = txtCorreo.getText();
             String password = txtPassword.getText();
-            Persona persona = principalControlador.login(email, password);
+            principalControlador.login(email, password);
 
             if (persona.getTipoPersona() != TipoPersona.ADMINISTRADOR) {
                 Sesion sesion = Sesion.getInstancia();
