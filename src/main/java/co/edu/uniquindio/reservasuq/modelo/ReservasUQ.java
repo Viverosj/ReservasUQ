@@ -395,4 +395,7 @@ public class ReservasUQ implements ServiciosReservasUQ {
                 "\nNuevo Costo: $" + instalacionAActualizar.getCosto());
         alert.showAndWait();
     }
+
+    //metodo de generar horarios
+    
 }
